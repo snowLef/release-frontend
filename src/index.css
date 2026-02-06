@@ -1,0 +1,24 @@
+/* src/index.css */
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  /* Переменные для легкой смены стиля */
+  --bg-color: #f3f4f6; /* Светло-серый фон вместо черного */
+  --card-bg: #ffffff; /* Белые карточки */
+  --text-main: #1f2937; /* Темно-серый текст */
+  --text-secondary: #6b7280;
+  --accent-color: #3b82f6; /* Синий вместо оранжевого */
+  --border-radius: 12px;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
