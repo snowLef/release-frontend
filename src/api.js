@@ -38,6 +38,8 @@ export const createRelease = async (token, releaseData, file) => {
  * Получение списка релизов
  */
 export const fetchReleases = async (token) => {
+    console.log('🌐 fetchReleases вызван с токеном:', token ? 'Есть' : 'Нет');
+
     const response = await fetch(API_URL, {
         method: 'GET',
         headers: {
@@ -46,9 +48,17 @@ export const fetchReleases = async (token) => {
         }
     });
 
-    if (!response.ok) throw new Error('Ошибка загрузки');
+    console.log('📡 Ответ сервера:', response.status, response.statusText);
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Ошибка от сервера:', errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+    }
+
     const data = await response.json();
-    return data.content || [];
+    console.log('✅ Данные распарсены:', data);
+    return data;
 };
 
 /**

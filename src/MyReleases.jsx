@@ -1,43 +1,93 @@
-import React, { useState, useEffect, useRef } from 'react'; // <--- ДОБАВЬ ЭТО
+import React, { useState, useEffect, useRef } from 'react';
 import { useLogto } from '@logto/react';
 import { fetchReleases } from './api';
 
 export default function MyReleases() {
     const { getAccessToken } = useLogto();
-    const [releases, setReleases] = useState([]); // Теперь useState будет определен
+    const [releases, setReleases] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null); // ✅ Добавили состояние для ошибок
     const isInitialMount = useRef(true);
 
     useEffect(() => {
-        // Если это не первая загрузка — выходим (защита от маунта/анмаунта)
-        if (!isInitialMount.current) return;
+        console.log('🔄 MyReleases useEffect запущен');
+        console.log('isInitialMount.current:', isInitialMount.current);
+
+        if (!isInitialMount.current) {
+            console.log('⛔ Выход: уже загружали данные');
+            return;
+        }
 
         let isMounted = true;
 
         const loadData = async () => {
-            if (!getAccessToken) return; // Защита
+            console.log('🚀 Начинаем загрузку релизов...');
+
+            if (!getAccessToken) {
+                console.log('⛔ getAccessToken недоступен');
+                return;
+            }
+
             try {
                 setLoading(true);
+                console.log('🔑 Получаем токен...');
                 const token = await getAccessToken('http://localhost:8080');
+                console.log('✅ Токен получен:', token ? 'Есть' : 'Нет');
+
+                console.log('📡 Запрашиваем релизы...');
                 const data = await fetchReleases(token);
+                console.log('📦 Получены данные:', data);
+                console.log('📊 Количество релизов:', data?.length);
+
                 if (isMounted) {
                     setReleases(data);
-                    isInitialMount.current = false; // Помечаем, что данные уже есть
+                    isInitialMount.current = false;
+                    console.log('✅ Релизы установлены в state');
                 }
             } catch (e) {
-                console.error("Ошибка:", e);
+                console.error("❌ Ошибка загрузки:", e);
+                console.error("Детали ошибки:", e.message, e.response);
+                if (isMounted) {
+                    setError(e.message);
+                }
             } finally {
-                if (isMounted) setLoading(false);
+                if (isMounted) {
+                    setLoading(false);
+                    console.log('✅ Загрузка завершена');
+                }
             }
         };
 
         loadData();
-        return () => { isMounted = false; };
-    }, []);
+        return () => {
+            console.log('🧹 Cleanup MyReleases');
+            isMounted = false;
+        };
+    }, []); // ✅ Пустой массив зависимостей
 
-    if (loading) return <div className="text-center">Загрузка ваших треков...</div>;
+    console.log('🎨 Рендер MyReleases:', { loading, releasesCount: releases.length, error });
 
-    if (releases.length === 0) {
+    if (loading) {
+        return <div className="text-center">Загрузка ваших треков...</div>;
+    }
+
+    // ✅ Показываем ошибку, если есть
+    if (error) {
+        return (
+            <div style={{textAlign: 'center', padding: '3rem', color: '#dc2626'}}>
+                <p>❌ Ошибка загрузки: {error}</p>
+                <button
+                    onClick={() => window.location.reload()}
+                    className="btn-primary"
+                    style={{marginTop: '1rem'}}
+                >
+                    Обновить страницу
+                </button>
+            </div>
+        );
+    }
+
+    if (!releases || releases.length === 0) {
         return (
             <div style={{textAlign: 'center', padding: '3rem', color: '#888'}}>
                 <p>У вас пока нет загруженных релизов.</p>
@@ -46,29 +96,26 @@ export default function MyReleases() {
         );
     }
 
+    // Остальной код рендера релизов...
     return (
         <div className="requests-list fade-in">
-            {releases.map((req) => (
-                <div key={req.id} className="request-card">
+            {releases.map((release) => (
+                <div key={release.id} className="request-card">
                     <div className="request-header" style={{cursor: 'default'}}>
                         <div className="info-main">
-                            <strong>{req.artist} — {req.title}</strong>
+                            <strong>
+                                {release.artist?.trim() || 'Без имени'} — {release.title?.trim() || 'Без названия'}
+                            </strong>
                         </div>
                         <div className="info-meta">
-                            <span>{req.releaseDate}</span>
-                            <span className={`status-badge status-${req.status.toLowerCase()}`}>
-                {req.status === 'PENDING' && 'На проверке'}
-                                {req.status === 'REJECTED' && 'Отклонено'}
-                                {req.status === 'SENT_TO_ZVONKO' && 'Принято'}
-              </span>
+                            <span>{release.releaseDate || 'Дата не указана'}</span>
+                            <span className={`status-badge status-${release.status.toLowerCase()}`}>
+                                {release.status === 'PENDING' && 'На проверке'}
+                                {release.status === 'REJECTED' && 'Отклонено'}
+                                {release.status === 'SENT_TO_ZVONKO' && 'Принято'}
+                            </span>
                         </div>
                     </div>
-                    {/* Если отклонено, можно вывести причину (если добавим это поле в будущем) */}
-                    {req.status === 'REJECTED' && (
-                        <div style={{padding: '0 1.5rem 1rem', color: '#dc2626', fontSize: '0.9rem'}}>
-                            Статус: Отклонено модератором.
-                        </div>
-                    )}
                 </div>
             ))}
         </div>
