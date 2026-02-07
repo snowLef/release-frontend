@@ -1,61 +1,78 @@
 import { useLogto } from '@logto/react';
+import { useState, useEffect } from 'react';
+
 import Callback from './Callback';
 import UserDashboard from './UserDashboard';
-import AdminDashboard from './AdminDashboard'; // Не забудьте импорт!
-import { useState, useEffect } from 'react';
+import AdminDashboard from './AdminDashboard';
 
 function App() {
     const [user, setUser] = useState(null);
     const [roles, setRoles] = useState([]);
-    // Достаем метод signOut из хука
-    const { isAuthenticated, isLoading, signIn, signOut, getIdTokenClaims } = useLogto();
+
+    const {
+        isAuthenticated,
+        isLoading,
+        signIn,
+        signOut,
+        getIdTokenClaims,
+    } = useLogto();
 
     const handleLogout = () => {
-        // signOut принимает URL, на который нужно вернуть пользователя после выхода
-        // Этот URL должен быть добавлен в "Post Logout Redirect URIs" в консоли Logto!
         signOut('http://localhost:5173');
     };
 
+    /**
+     * Загружаем данные пользователя (ID Token)
+     * roles, email, sub и т.д.
+     */
     useEffect(() => {
-        if (isAuthenticated) {
-            // Мы уже знаем, что getIdTokenClaims работает!
-            getIdTokenClaims().then(claims => {
-                setRoles(claims?.roles || []);
-                // Используем данные из claims вместо fetchUserInfo, чтобы не плодить запросы
-                setUser({
-                    email: claims.email,
-                    id: claims.sub
-                });
-            }).catch(e => console.error("Ошибка claims:", e));
-        }
-    }, [isAuthenticated, getIdTokenClaims]);
+        if (!isAuthenticated || isLoading) return;
 
-    useEffect(() => {
-        const loadUserData = async () => {
-            if (isAuthenticated) {
-                const claims = await getIdTokenClaims();
-                console.log("Мои Claims из ID Token:", claims); // СМОТРИ СЮДА В КОНСОЛИ
-                setRoles(claims?.roles || []);
-                // ...
-            }
+        // Проверяем ДО вызова async функции
+        if (user?.id) return; // Если пользователь уже загружен, выходим
+
+        const loadUser = async () => {
+            const claims = await getIdTokenClaims();
+
+            setRoles(claims?.roles ?? []);
+            setUser({
+                id: claims.sub,
+                email: claims.email,
+            });
+
+            console.log('ID Token claims:', claims);
         };
-        loadUserData();
-    }, [isAuthenticated]);
 
-    // 1. Обработка Callback
+        loadUser();
+    }, [isAuthenticated, isLoading, user, getIdTokenClaims]);
+
+    /**
+     * Callback от Logto
+     */
     if (window.location.pathname === '/callback') {
         return <Callback />;
     }
 
-    // 2. Первоначальная загрузка SDK
+    /**
+     * Инициализация SDK
+     */
     if (isLoading) {
-        return <div className="container"><h2>Загрузка...</h2></div>;
+        return (
+            <div className="container">
+                <h2>Загрузка…</h2>
+            </div>
+        );
     }
 
-    // 3. Если не авторизован
+    /**
+     * Не авторизован
+     */
     if (!isAuthenticated) {
         return (
-            <div className="container" style={{ textAlign: 'center', marginTop: '100px' }}>
+            <div
+                className="container"
+                style={{ textAlign: 'center', marginTop: '100px' }}
+            >
                 <h1>Bomjegrom Production</h1>
                 <button
                     className="btn-primary"
@@ -67,21 +84,24 @@ function App() {
         );
     }
 
-    // 4. Ждем, пока загрузится объект user (теперь он обновится в useEffect)
-    if (!user && isAuthenticated) {
-        return <div className="container"><h2>Загрузка данных...</h2></div>;
+    /**
+     * Ждём, пока загрузятся claims
+     */
+    if (!user) {
+        return (
+            <div className="container">
+                <h2>Загрузка данных пользователя…</h2>
+            </div>
+        );
     }
 
-    // 5. Логика отображения дашбордов в зависимости от ролей
-    if (roles.includes('admin')) {
-        return <AdminDashboard user={user} onLogout={() => window.location.assign('/')} />;
-    }
-
+    /**
+     * Роутинг по ролям
+     */
     if (roles.includes('admin')) {
         return <AdminDashboard user={user} onLogout={handleLogout} />;
     }
 
-    // По умолчанию - обычный пользователь
     return <UserDashboard user={user} onLogout={handleLogout} />;
 }
 

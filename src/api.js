@@ -25,7 +25,6 @@ export const createRelease = async (token, releaseData, file) => {
     const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
-            // ВОТ ТУТ МЫ ИСПОЛЬЗУЕМ ТОКЕН
             'Authorization': `Bearer ${token}`
         },
         body: formData

@@ -33,12 +33,18 @@ export default function ReleaseWizard({ onSuccess }) {
     const handleNext = () => setCurrentStep(prev => prev + 1);
     const handleBack = () => setCurrentStep(prev => prev - 1);
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        if (e) e.preventDefault();
+
         if (!trackFile) return alert('Пожалуйста, выберите файл');
+
+        console.log('handleSubmit вызван'); // Добавьте это
+
+        if (loading) return; // Добавьте защиту от двойного клика
+
         try {
             setLoading(true);
-            // Замени URL на свой API Identifier из Logto
-            const token = await getAccessToken('https://ruhxnl.logto.app/api');
+            const token = await getAccessToken('http://localhost:8080');
             await createRelease(token, formData, trackFile);
             alert('Готово!');
             if (onSuccess) onSuccess();

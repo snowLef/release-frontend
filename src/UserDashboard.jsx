@@ -42,9 +42,9 @@ export default function UserDashboard({ user, onLogout }) {
             {/* Контент */}
             <div className="tab-content">
                 {activeTab === 'create' ? (
-                    <ReleaseWizard user={user} onSuccess={handleReleaseCreated} />
+                    <ReleaseWizard onSuccess={handleReleaseCreated} /> // user не нужен
                 ) : (
-                    <MyReleases user={user} />
+                    <MyReleases /> // user не нужен, MyReleases сам берет данные из токена
                 )}
             </div>
         </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; // <--- ДОБАВЬ ЭТО
+import React, { useState, useEffect, useRef } from 'react'; // <--- ДОБАВЬ ЭТО
 import { useLogto } from '@logto/react';
 import { fetchReleases } from './api';
 
@@ -6,21 +6,34 @@ export default function MyReleases() {
     const { getAccessToken } = useLogto();
     const [releases, setReleases] = useState([]); // Теперь useState будет определен
     const [loading, setLoading] = useState(true);
+    const isInitialMount = useRef(true);
 
     useEffect(() => {
+        // Если это не первая загрузка — выходим (защита от маунта/анмаунта)
+        if (!isInitialMount.current) return;
+
+        let isMounted = true;
+
         const loadData = async () => {
+            if (!getAccessToken) return; // Защита
             try {
-                const token = await getAccessToken('https://ruhxnl.logto.app/api');
+                setLoading(true);
+                const token = await getAccessToken('http://localhost:8080');
                 const data = await fetchReleases(token);
-                setReleases(data);
+                if (isMounted) {
+                    setReleases(data);
+                    isInitialMount.current = false; // Помечаем, что данные уже есть
+                }
             } catch (e) {
-                console.error("Ошибка загрузки:", e);
+                console.error("Ошибка:", e);
             } finally {
-                setLoading(false);
+                if (isMounted) setLoading(false);
             }
         };
+
         loadData();
-    }, [getAccessToken]);
+        return () => { isMounted = false; };
+    }, []);
 
     if (loading) return <div className="text-center">Загрузка ваших треков...</div>;
 
