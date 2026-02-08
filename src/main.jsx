@@ -2,9 +2,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { LogtoProvider } from '@logto/react';
-import App from './App.jsx';
-import '../styles/App.css';
-import '../styles/index.css';
+import App from './components/App.jsx';
+import './styles/App.css';
+import './styles/index.css';
 
 const config = {
     endpoint: 'https://ruhxnl.logto.app/', // Проверь этот URL в консоли Logto!
