@@ -1,9 +1,9 @@
 import { useLogto } from '@logto/react';
 import { useState, useEffect, useRef } from 'react';
 
-import Callback from './Callback.jsx';
-import UserDashboard from './UserDashboard.jsx';
-import AdminDashboard from './AdminDashboard.jsx';
+import Callback from './components/auth/Callback.jsx';
+import UserDashboard from './components/dashboard/UserDashboard.jsx';
+import AdminDashboard from './components/dashboard/AdminDashboard.jsx';
 
 function App() {
     const [user, setUser] = useState(null);

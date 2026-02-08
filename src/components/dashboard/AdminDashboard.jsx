@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLogto } from '@logto/react';
-import { fetchAllReleases, updateReleaseStatus } from '../api.js';
-import Header from './Header.jsx';
+import { fetchAllReleases, updateReleaseStatus } from '../../services/api.js';
+import Header from '../common/Header.jsx';
 
 export default function AdminDashboard({ user, scopes, onLogout }) {
     const { getAccessToken } = useLogto();

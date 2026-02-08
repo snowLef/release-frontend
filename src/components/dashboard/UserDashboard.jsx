@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import MyReleases from './MyReleases.jsx';
-import ReleaseWizard from './release_wizard/ReleaseWizard.jsx';
-import Header from './Header.jsx';
+import MyReleases from '../MyReleases.jsx';
+import ReleaseWizard from '../ReleaseWizard/ReleaseWizard.jsx';
+import Header from '../common/Header.jsx';
 
 export default function UserDashboard({ user, scopes, onLogout }) {
     const [activeTab, setActiveTab] = useState('list');

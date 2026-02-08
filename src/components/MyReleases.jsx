@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLogto } from '@logto/react';
-import { fetchReleases, cancelRelease } from '../api.js';
+import { fetchReleases, cancelRelease } from '../services/api.js';
 
 export default function MyReleases() {
     const { getAccessToken } = useLogto();

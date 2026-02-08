@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { LogtoProvider } from '@logto/react';
-import App from './components/App.jsx';
+import App from './App.jsx';
 import './styles/App.css';
 import './styles/index.css';
 
