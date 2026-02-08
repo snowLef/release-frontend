@@ -1,5 +1,5 @@
 import { useLogto } from '@logto/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import Callback from './Callback';
 import UserDashboard from './UserDashboard';
@@ -7,7 +7,8 @@ import AdminDashboard from './AdminDashboard';
 
 function App() {
     const [user, setUser] = useState(null);
-    const [roles, setRoles] = useState([]);
+    const [scopes, setScopes] = useState([]); // ✅ Теперь scopes вместо roles
+    const loadedUserRef = useRef(false);
 
     const {
         isAuthenticated,
@@ -15,6 +16,7 @@ function App() {
         signIn,
         signOut,
         getIdTokenClaims,
+        getAccessToken, // ✅ Добавляем для получения Access Token
     } = useLogto();
 
     const handleLogout = () => {
@@ -22,29 +24,50 @@ function App() {
     };
 
     /**
-     * Загружаем данные пользователя (ID Token)
-     * roles, email, sub и т.д.
+     * ✅ Загружаем данные пользователя и scopes
      */
     useEffect(() => {
-        if (!isAuthenticated || isLoading) return;
-
-        // Проверяем ДО вызова async функции
-        if (user?.id) return; // Если пользователь уже загружен, выходим
+        if (!isAuthenticated || isLoading || loadedUserRef.current) return;
 
         const loadUser = async () => {
-            const claims = await getIdTokenClaims();
+            try {
+                // Получаем ID Token claims (для email, sub)
+                const idClaims = await getIdTokenClaims();
 
-            setRoles(claims?.roles ?? []);
-            setUser({
-                id: claims.sub,
-                email: claims.email,
-            });
+                // Получаем Access Token (там есть scopes)
+                const accessToken = await getAccessToken('http://localhost:8080');
 
-            console.log('ID Token claims:', claims);
+                // Декодируем Access Token чтобы получить scopes
+                const tokenParts = accessToken.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+
+                console.log('ID Token claims:', idClaims);
+                console.log('Access Token payload:', payload);
+                console.log('Scopes:', payload.scope);
+
+                // Scopes обычно приходят строкой через пробел: "read:releases api:admin"
+                const userScopes = payload.scope ? payload.scope.split(' ') : [];
+
+                setScopes(userScopes);
+                setUser({
+                    id: idClaims.sub,
+                    email: idClaims.email,
+                });
+
+                loadedUserRef.current = true;
+
+                // Проверяем, является ли пользователь админом
+                const isAdmin = userScopes.includes('api:admin');
+                console.log('Is Admin:', isAdmin);
+                console.log('User Scopes:', userScopes);
+
+            } catch (error) {
+                console.error('Ошибка загрузки пользователя:', error);
+            }
         };
 
         loadUser();
-    }, [isAuthenticated, isLoading, user, getIdTokenClaims]);
+    }, [isAuthenticated, isLoading, getIdTokenClaims, getAccessToken]);
 
     /**
      * Callback от Logto
@@ -85,7 +108,7 @@ function App() {
     }
 
     /**
-     * Ждём, пока загрузятся claims
+     * Ждём, пока загрузятся данные
      */
     if (!user) {
         return (
@@ -96,13 +119,15 @@ function App() {
     }
 
     /**
-     * Роутинг по ролям
+     * ✅ Роутинг по scopes (проверяем api:admin)
      */
-    if (roles.includes('admin')) {
-        return <AdminDashboard user={user} onLogout={handleLogout} />;
+    const isAdmin = scopes.includes('api:admin');
+
+    if (isAdmin) {
+        return <AdminDashboard user={user} scopes={scopes} onLogout={handleLogout} />;
     }
 
-    return <UserDashboard user={user} onLogout={handleLogout} />;
+    return <UserDashboard user={user} scopes={scopes} onLogout={handleLogout} />;
 }
 
 export default App;

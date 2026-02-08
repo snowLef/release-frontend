@@ -61,16 +61,55 @@ export const fetchReleases = async (token) => {
     return data;
 };
 
-/**
- * Смена статуса (для Админа)
- */
-export const updateReleaseStatus = async (token, id, status) => {
-    const response = await fetch(`${API_URL}/${id}/status?status=${status}`, {
-        method: 'PATCH',
+// ✅ Получить все релизы (для админа) - используем общий эндпоинт
+export async function fetchAllReleases(token) {
+    const response = await fetch('http://localhost:8080/api/releases', { // ✅ Изменили URL
+        method: 'GET',
         headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
         }
     });
-    if (!response.ok) throw new Error('Ошибка обновления статуса');
-    return response.json();
+
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+    }
+
+    return await response.json();
+}
+
+// ✅ Изменить статус релиза (для админа)
+export async function updateReleaseStatus(token, releaseId, status) {
+    const response = await fetch(`http://localhost:8080/api/releases/${releaseId}/status?status=${status}`, { // ✅ Добавили query параметр
+        method: 'PATCH',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+        // ❌ Убрали body, т.к. бэкенд ожидает @RequestParam
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+    }
+
+    return await response.json();
+}
+
+// Отозвать заявку (для артиста)
+export async function cancelRelease(token, releaseId) {
+    const response = await fetch(`http://localhost:8080/api/releases/${releaseId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+    }
+
+    return true;
 }
