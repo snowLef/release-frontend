@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLogto } from '@logto/react';
-import { fetchReleases, cancelRelease } from './api';
+import { fetchReleases, cancelRelease } from '../api.js';
 
 export default function MyReleases() {
     const { getAccessToken } = useLogto();
@@ -83,13 +83,28 @@ export default function MyReleases() {
         return statusMap[status] || status;
     };
 
-    if (loading) return <div className="text-center">Загрузка ваших треков...</div>;
+    if (loading) {
+        return (
+            <div style={{textAlign: 'center', padding: '3rem'}}>
+                <div className="spinner" style={{
+                    width: '40px',
+                    height: '40px',
+                    border: '4px solid var(--border)',
+                    borderTopColor: 'var(--terracotta)',
+                    margin: '0 auto 1rem'
+                }}></div>
+                <p>Загрузка ваших треков...</p>
+            </div>
+        );
+    }
 
     if (error) {
         return (
-            <div style={{textAlign: 'center', padding: '3rem', color: 'var(--error)'}}>
-                <p>❌ Ошибка загрузки: {error}</p>
-                <button onClick={() => window.location.reload()} className="btn-primary" style={{marginTop: '1rem'}}>
+            <div className="form-card" style={{textAlign: 'center', padding: '3rem'}}>
+                <p style={{color: 'var(--error)', marginBottom: '1rem'}}>
+                    ❌ Ошибка загрузки: {error}
+                </p>
+                <button onClick={() => window.location.reload()} className="btn-primary">
                     Обновить страницу
                 </button>
             </div>
@@ -98,17 +113,12 @@ export default function MyReleases() {
 
     if (!releases || releases.length === 0) {
         return (
-            <div style={{
-                textAlign: 'center',
-                padding: '3rem',
-                color: 'var(--text-secondary)',
-                background: 'var(--bg-card)',
-                borderRadius: 'var(--border-radius)',
-                border: '1px solid var(--border)'
-            }}>
-                <p style={{fontSize: '3rem', margin: '0 0 1rem 0'}}>🎵</p>
-                <p style={{fontSize: '1.1rem', marginBottom: '0.5rem'}}>У вас пока нет загруженных релизов</p>
-                <p style={{color: 'var(--text-muted)'}}>Перейдите во вкладку "Создать релиз", чтобы начать!</p>
+            <div className="form-card" style={{textAlign: 'center', padding: '3rem'}}>
+                <p style={{fontSize: '4rem', margin: '0 0 1rem 0'}}>🎵</p>
+                <h3 style={{marginBottom: '0.5rem'}}>У вас пока нет загруженных релизов</h3>
+                <p style={{color: 'var(--text-muted)'}}>
+                    Перейдите во вкладку "Создать релиз", чтобы начать!
+                </p>
             </div>
         );
     }
@@ -121,7 +131,7 @@ export default function MyReleases() {
 
                 return (
                     <div key={release.id} className="request-card">
-                        {/* ✅ Заголовок карточки - стрелка справа */}
+                        {/* Заголовок карточки */}
                         <div
                             className="request-header"
                             onClick={() => toggleExpand(release.id)}
@@ -129,20 +139,18 @@ export default function MyReleases() {
                                 cursor: 'pointer',
                                 display: 'flex',
                                 justifyContent: 'space-between',
-                                alignItems: 'center',
-                                padding: '1.25rem 1.5rem'
+                                alignItems: 'center'
                             }}
                         >
                             <div style={{ flex: 1 }}>
                                 <div style={{
-                                    fontSize: '1.05rem',
+                                    fontSize: '1.1rem',
                                     fontWeight: '600',
                                     color: 'var(--text-primary)',
                                     marginBottom: '0.5rem'
                                 }}>
                                     {release.artist?.trim() || 'Без имени'} — {release.title?.trim() || 'Без названия'}
                                 </div>
-                                {/* ✅ Вернули информацию о жанре */}
                                 <div style={{
                                     fontSize: '0.85rem',
                                     color: 'var(--text-secondary)',
@@ -157,7 +165,7 @@ export default function MyReleases() {
                                 </div>
                             </div>
 
-                            {/* ✅ Статус и стрелка справа */}
+                            {/* Статус и стрелка справа */}
                             <div style={{
                                 display: 'flex',
                                 alignItems: 'center',
@@ -179,13 +187,9 @@ export default function MyReleases() {
                             </div>
                         </div>
 
-                        {/* ✅ Раскрытая информация */}
+                        {/* Раскрытая информация */}
                         {isExpanded && (
-                            <div className="release-details" style={{
-                                padding: '1.5rem',
-                                borderTop: '1px solid var(--border)',
-                                background: 'var(--bg-secondary)'
-                            }}>
+                            <div className="release-details">
                                 {/* Детальная информация */}
                                 <div style={{
                                     display: 'grid',
@@ -194,73 +198,28 @@ export default function MyReleases() {
                                     marginBottom: '1.5rem'
                                 }}>
                                     <div>
-                                        <div style={{
-                                            fontSize: '0.75rem',
-                                            color: 'var(--text-muted)',
-                                            textTransform: 'uppercase',
-                                            letterSpacing: '0.05em',
-                                            marginBottom: '0.5rem'
-                                        }}>
-                                            Дата релиза
-                                        </div>
-                                        <div style={{
-                                            fontWeight: '500',
-                                            color: 'var(--text-primary)'
-                                        }}>
+                                        <div className="info-label">Дата релиза</div>
+                                        <div className="info-value">
                                             {formatDate(release.releaseDate)}
                                         </div>
                                     </div>
                                     <div>
-                                        <div style={{
-                                            fontSize: '0.75rem',
-                                            color: 'var(--text-muted)',
-                                            textTransform: 'uppercase',
-                                            letterSpacing: '0.05em',
-                                            marginBottom: '0.5rem'
-                                        }}>
-                                            Создано
-                                        </div>
-                                        <div style={{
-                                            fontWeight: '500',
-                                            color: 'var(--text-primary)',
-                                            fontSize: '0.9rem'
-                                        }}>
+                                        <div className="info-label">Создано</div>
+                                        <div className="info-value">
                                             {formatDate(release.createdAt)}
                                         </div>
                                     </div>
                                     <div>
-                                        <div style={{
-                                            fontSize: '0.75rem',
-                                            color: 'var(--text-muted)',
-                                            textTransform: 'uppercase',
-                                            letterSpacing: '0.05em',
-                                            marginBottom: '0.5rem'
-                                        }}>
-                                            Жанр
-                                        </div>
-                                        <div style={{
-                                            fontWeight: '500',
-                                            color: 'var(--text-primary)'
-                                        }}>
-                                            {release.genre}
-                                        </div>
+                                        <div className="info-label">Жанр</div>
+                                        <div className="info-value">{release.genre}</div>
                                     </div>
                                     <div>
+                                        <div className="info-label">Файл</div>
                                         <div style={{
-                                            fontSize: '0.75rem',
-                                            color: 'var(--text-muted)',
-                                            textTransform: 'uppercase',
-                                            letterSpacing: '0.05em',
-                                            marginBottom: '0.5rem'
-                                        }}>
-                                            Файл
-                                        </div>
-                                        <div style={{
-                                            fontWeight: '500',
                                             fontSize: '0.8rem',
                                             wordBreak: 'break-all',
                                             fontFamily: 'monospace',
-                                            color: 'var(--accent)'
+                                            color: 'var(--terracotta)'
                                         }}>
                                             {release.wavFileUrl || 'Нет'}
                                         </div>
@@ -271,7 +230,7 @@ export default function MyReleases() {
                                 {release.status === 'PENDING' && (
                                     <div style={{
                                         paddingTop: '1rem',
-                                        borderTop: '1px solid var(--border)'
+                                        borderTop: '2px solid var(--border)'
                                     }}>
                                         <button
                                             onClick={(e) => {
@@ -281,7 +240,6 @@ export default function MyReleases() {
                                             disabled={isProcessing}
                                             className="btn-danger"
                                             style={{
-                                                padding: '0.75rem 1.5rem',
                                                 opacity: isProcessing ? 0.5 : 1
                                             }}
                                         >
@@ -293,10 +251,11 @@ export default function MyReleases() {
                                 {release.status === 'REJECTED' && (
                                     <div style={{
                                         padding: '1rem',
-                                        background: 'var(--error-bg)',
+                                        background: 'var(--status-rejected-bg)',
                                         borderRadius: '8px',
-                                        color: 'var(--error)',
-                                        fontSize: '0.9rem'
+                                        color: 'var(--status-rejected)',
+                                        fontSize: '0.9rem',
+                                        border: '2px solid var(--status-rejected)'
                                     }}>
                                         ⚠️ Этот релиз был отклонен модератором
                                     </div>

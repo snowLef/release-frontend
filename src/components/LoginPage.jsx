@@ -1,6 +1,6 @@
 // src/LoginPage.jsx
 import React, { useState } from 'react';
-import './App.css'; // Используем те же стили
+import '../styles/App.css'; // Используем те же стили
 
 export default function LoginPage({ onLogin }) {
     const [email, setEmail] = useState('');
