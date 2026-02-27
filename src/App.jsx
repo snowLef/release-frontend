@@ -40,7 +40,10 @@ function App() {
 
                 // Декодируем Access Token чтобы получить scopes
                 const tokenParts = accessToken.split('.');
-                const payload = JSON.parse(atob(tokenParts[1]));
+                if (tokenParts.length !== 3) throw new Error('Invalid JWT structure');
+                const base64url = tokenParts[1].replace(/-/g, '+').replace(/_/g, '/');
+                const padded = base64url.padEnd(base64url.length + (4 - base64url.length % 4) % 4, '=');
+                const payload = JSON.parse(atob(padded));
 
                 console.log('ID Token claims:', idClaims);
                 console.log('Access Token payload:', payload);
