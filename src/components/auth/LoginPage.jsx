@@ -1,5 +1,6 @@
 // src/LoginPage.jsx
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import '../../styles/App.css'; // Используем те же стили
 
 export default function LoginPage({ onLogin }) {
@@ -32,7 +33,7 @@ export default function LoginPage({ onLogin }) {
     };
 
     const handleSocialLogin = (provider) => {
-        alert(`Логика входа через ${provider} (требует настройки Backend)`);
+        toast(`Логика входа через ${provider} (требует настройки Backend)`);
         // Для демо пускаем сразу
         onLogin({ name: 'Social User', email: 'social@test.com' });
     };

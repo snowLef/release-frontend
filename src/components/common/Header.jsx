@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import toast from 'react-hot-toast';
 
-export default function Header({ user, scopes = [], onLogout }) {
+export default function Header({ user, scopes = [], onLogout, activeTab, onTabChange }) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
     const isAdmin = scopes.includes('api:admin');
@@ -35,6 +36,24 @@ export default function Header({ user, scopes = [], onLogout }) {
                         </div>
                     </div>
                 </div>
+
+                {/* Центр - Навигация */}
+                {onTabChange && (
+                    <nav className="header-nav">
+                        <button
+                            className={`header-nav-btn ${activeTab === 'create' ? 'active' : ''}`}
+                            onClick={() => onTabChange('create')}
+                        >
+                            ➕ Создать релиз
+                        </button>
+                        <button
+                            className={`header-nav-btn ${activeTab === 'list' ? 'active' : ''}`}
+                            onClick={() => onTabChange('list')}
+                        >
+                            📋 Мои релизы
+                        </button>
+                    </nav>
+                )}
 
                 {/* Правая часть - Пользователь */}
                 <div className="header-right" ref={dropdownRef}>
@@ -87,7 +106,7 @@ export default function Header({ user, scopes = [], onLogout }) {
                                 <button className="dropdown-item" onClick={() => {
                                     setIsDropdownOpen(false);
                                     // TODO: Добавить редактирование профиля
-                                    alert('Редактирование профиля - в разработке');
+                                    toast('Редактирование профиля — в разработке');
                                 }}>
                                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                                         <path d="M12.75 2.25L15.75 5.25L5.25 15.75H2.25V12.75L12.75 2.25Z"

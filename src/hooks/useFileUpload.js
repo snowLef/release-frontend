@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 export function useFileUpload() {
     const validateFile = (file, options) => {
@@ -58,12 +59,12 @@ export function useCoverUpload() {
                 };
                 reader.onerror = (error) => {
                     console.error('FileReader error:', error);
-                    alert('Ошибка при чтении файла');
+                    toast.error('Ошибка при чтении файла');
                 };
                 reader.readAsDataURL(file);
             } catch (error) {
                 console.error('Validation error:', error);
-                alert(error.message);
+                toast.error(error.message);
             }
         } else {
             console.log('No file selected');
@@ -88,7 +89,7 @@ export function useVideoUpload() {
                 });
                 setVideoFile(file);
             } catch (error) {
-                alert(error.message);
+                toast.error(error.message);
             }
         }
     };
@@ -111,7 +112,7 @@ export function useBookletUpload() {
                 });
                 setBookletFile(file);
             } catch (error) {
-                alert(error.message);
+                toast.error(error.message);
             }
         }
     };
@@ -137,7 +138,7 @@ export function useTrackFiles() {
                     });
                     validFiles.push(file);
                 } catch (error) {
-                    alert(`Файл ${file.name}: ${error.message}`);
+                    toast.error(`Файл ${file.name}: ${error.message}`);
                 }
             }
 

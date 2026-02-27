@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLogto } from '@logto/react';
+import toast from 'react-hot-toast';
 import { fetchAllReleases, updateReleaseStatus } from '../../services/api.js';
 import Header from '../common/Header.jsx';
 
@@ -23,7 +24,7 @@ export default function AdminDashboard({ user, scopes, onLogout }) {
             setReleases(data);
         } catch (e) {
             console.error('Ошибка загрузки:', e);
-            alert('Ошибка загрузки релизов: ' + e.message);
+            toast.error('Ошибка загрузки релизов: ' + e.message);
         } finally {
             setLoading(false);
         }
@@ -47,9 +48,9 @@ export default function AdminDashboard({ user, scopes, onLogout }) {
                 r.id === releaseId ? { ...r, status: newStatus } : r
             ));
 
-            alert(`✅ Статус изменен на: ${statusNames[newStatus]}`);
+            toast.success(`Статус изменён на: ${statusNames[newStatus]}`);
         } catch (e) {
-            alert('❌ Ошибка: ' + e.message);
+            toast.error('Ошибка: ' + e.message);
         } finally {
             setActionLoading(null);
         }

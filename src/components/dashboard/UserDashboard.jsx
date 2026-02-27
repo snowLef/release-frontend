@@ -13,26 +13,9 @@ export default function UserDashboard({ user, scopes, onLogout }) {
     return (
         <>
             {/* ✅ Header вне container */}
-            <Header user={user} scopes={scopes} onLogout={onLogout} />
+            <Header user={user} scopes={scopes} onLogout={onLogout} activeTab={activeTab} onTabChange={setActiveTab} />
 
             <div className="container">
-                {/* Навигация */}
-                <div className="tabs-nav">
-                    <button
-                        className={`tab-btn ${activeTab === 'create' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('create')}
-                    >
-                        ➕ Создать релиз
-                    </button>
-                    <button
-                        className={`tab-btn ${activeTab === 'list' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('list')}
-                    >
-                        📋 Мои релизы
-                    </button>
-                </div>
-
-                {/* Контент */}
                 <div className="tab-content">
                     {activeTab === 'create' ? (
                         <ReleaseWizard onSuccess={handleReleaseCreated} />

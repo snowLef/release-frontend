@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLogto } from '@logto/react';
+import toast from 'react-hot-toast';
 import { createRelease } from '../../services/api.js';
 
 import { useWizardTabs } from '../../hooks/useWizardTabs';
@@ -53,28 +54,28 @@ export default function ReleaseWizard({ onSuccess }) {
 
     const validateForm = () => {
         if (!formData.releaseTitle.trim()) {
-            alert('Пожалуйста, укажите название релиза');
+            toast.error('Пожалуйста, укажите название релиза');
             return false;
         }
 
         if (!persons[0]?.name?.trim()) {
-            alert('Пожалуйста, укажите исполнителя');
+            toast.error('Пожалуйста, укажите исполнителя');
             return false;
         }
 
         if (!formData.releaseDate) {
-            alert('Пожалуйста, выберите дату релиза');
+            toast.error('Пожалуйста, выберите дату релиза');
             return false;
         }
 
         if (!noAudioFiles && trackFiles.length === 0) {
-            alert('Пожалуйста, загрузите аудио файлы или отметьте "Релиз без аудиофайлов"');
+            toast.error('Пожалуйста, загрузите аудио файлы или отметьте "Релиз без аудиофайлов"');
             return false;
         }
 
         // Дополнительные проверки
         if (!coverImage) {
-            alert('Пожалуйста, загрузите обложку релиза');
+            toast.error('Пожалуйста, загрузите обложку релиза');
             return false;
         }
 
@@ -113,11 +114,11 @@ export default function ReleaseWizard({ onSuccess }) {
             await createRelease(token, completeFormData, trackFiles, coverImage, videoFile, bookletFile);
 
             resetForm();
-            alert('✅ Релиз успешно отправлен на модерацию!');
+            toast.success('Релиз успешно отправлен на модерацию!');
             if (onSuccess) onSuccess();
         } catch (error) {
             console.error('Ошибка отправки:', error);
-            alert('❌ Ошибка: ' + error.message);
+            toast.error('Ошибка: ' + error.message);
         } finally {
             setLoading(false);
         }

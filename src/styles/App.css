@@ -99,12 +99,12 @@ body {
   padding: 0 2rem;
   height: 70px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
 /* Logo Section */
 .header-left {
+  flex: 1;
   display: flex;
   align-items: center;
 }
@@ -148,8 +148,43 @@ body {
   font-weight: 600;
 }
 
+/* Header Nav */
+.header-nav {
+  display: flex;
+  align-items: stretch;
+  height: 70px;
+}
+
+.header-nav-btn {
+  padding: 0 1.25rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.header-nav-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.header-nav-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
 /* User Menu */
 .header-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   position: relative;
 }
 
@@ -816,6 +851,11 @@ select:focus {
 
   .brand-name {
     font-size: 1.1rem;
+  }
+
+  .header-nav-btn {
+    padding: 0 0.75rem;
+    font-size: 0.8rem;
   }
 
   .user-info {

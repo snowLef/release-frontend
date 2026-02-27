@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLogto } from '@logto/react';
+import toast from 'react-hot-toast';
 import { fetchReleases, cancelRelease } from '../services/api.js';
 
 export default function MyReleases() {
@@ -51,9 +52,9 @@ export default function MyReleases() {
             await cancelRelease(token, releaseId);
 
             setReleases(releases.filter(r => r.id !== releaseId));
-            alert('Заявка успешно отозвана');
+            toast.success('Заявка успешно отозвана');
         } catch (e) {
-            alert('Ошибка: ' + e.message);
+            toast.error('Ошибка: ' + e.message);
         } finally {
             setActionLoading(null);
         }
