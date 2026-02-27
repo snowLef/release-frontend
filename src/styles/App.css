@@ -1270,6 +1270,180 @@ select:focus {
   }
 }
 
+/* === ADMIN DASHBOARD === */
+.admin-stats {
+  padding: 1rem 0;
+}
+
+.admin-stats h3 {
+  margin-bottom: 1rem;
+}
+
+.admin-hint {
+  padding: 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  color: #991b1b;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  color: var(--text-muted);
+}
+
+.empty-state-icon {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.request-card.expanded {
+  border: 2px solid #dc2626;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+}
+
+.request-header.expanded {
+  background: #fef2f2;
+}
+
+.release-title {
+  font-size: 1.05rem;
+}
+
+.release-meta {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.chevron {
+  font-size: 1.5rem;
+  transition: transform 0.3s;
+  display: inline-block;
+}
+
+.chevron.open {
+  transform: rotate(180deg);
+}
+
+.release-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+}
+
+.detail-label {
+  font-size: 0.75rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detail-value {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-top: 0.3rem;
+}
+
+.detail-value--mono {
+  font-family: monospace;
+}
+
+.detail-value--sm {
+  font-size: 0.9rem;
+}
+
+.detail-value--link {
+  font-size: 0.8rem;
+  word-break: break-all;
+  font-family: monospace;
+  color: #3b82f6;
+}
+
+.status-controls {
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  border: 2px dashed #d1d5db;
+}
+
+.status-controls-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.btn-status-action {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.btn-status-action:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-accept {
+  background: #10b981;
+  color: white;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+}
+
+.btn-accept.active {
+  background: #d1fae5;
+  color: #065f46;
+  box-shadow: none;
+}
+
+.btn-reject {
+  background: #dc2626;
+  color: white;
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
+}
+
+.btn-reject.active {
+  background: #fee2e2;
+  color: #991b1b;
+  box-shadow: none;
+}
+
+.btn-pending-status {
+  background: #f59e0b;
+  color: white;
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+}
+
+.btn-pending-status.active {
+  background: #fef3c7;
+  color: #92400e;
+  box-shadow: none;
+}
+
 /* === ADDITIONAL STYLES === */
 .requests-list {
   display: flex;
