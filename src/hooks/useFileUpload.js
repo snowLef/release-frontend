@@ -4,6 +4,13 @@ export function useFileUpload() {
     const validateFile = (file, options) => {
         const { allowedExtensions, maxSize, allowedMimeTypes } = options;
 
+        console.log('Validating file:', {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            options
+        });
+
         if (allowedExtensions && !allowedExtensions.some(ext =>
             file.name.toLowerCase().endsWith(ext)
         )) {
@@ -11,12 +18,13 @@ export function useFileUpload() {
         }
 
         if (allowedMimeTypes && !allowedMimeTypes.includes(file.type)) {
-            throw new Error(`Неверный тип файла`);
+            throw new Error(`Неверный тип файла. Допустимые форматы: ${allowedMimeTypes.join(', ')}`);
         }
 
         if (maxSize && file.size > maxSize) {
             const sizeMB = (maxSize / (1024 * 1024)).toFixed(0);
-            throw new Error(`Размер файла не должен превышать ${sizeMB} МБ`);
+            const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+            throw new Error(`Размер файла (${fileSizeMB} МБ) превышает максимально допустимый (${sizeMB} МБ)`);
         }
     };
 
@@ -29,23 +37,36 @@ export function useCoverUpload() {
     const { validateFile } = useFileUpload();
 
     const handleCoverChange = (e) => {
+        console.log('Cover upload triggered', e.target.files);
+
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
 
             try {
                 validateFile(file, {
-                    allowedMimeTypes: ['image/jpeg', 'image/jpg', 'image/png'],
-                    maxSize: 20 * 1024 * 1024
+                    allowedMimeTypes: ['image/jpeg', 'image/png'],
+                    maxSize: 20 * 1024 * 1024  // ← ИСПРАВЛЕНО: 20 МБ
                 });
 
+                console.log('Validation passed, setting cover image');
                 setCoverImage(file);
 
                 const reader = new FileReader();
-                reader.onloadend = () => setCoverPreview(reader.result);
+                reader.onloadend = () => {
+                    console.log('Preview loaded');
+                    setCoverPreview(reader.result);
+                };
+                reader.onerror = (error) => {
+                    console.error('FileReader error:', error);
+                    alert('Ошибка при чтении файла');
+                };
                 reader.readAsDataURL(file);
             } catch (error) {
+                console.error('Validation error:', error);
                 alert(error.message);
             }
+        } else {
+            console.log('No file selected');
         }
     };
 
@@ -63,7 +84,7 @@ export function useVideoUpload() {
             try {
                 validateFile(file, {
                     allowedExtensions: ['.mov'],
-                    maxSize: 6 * 1024 * 1024 * 1024
+                    maxSize: 6 * 1024 * 1024 * 1024  // 6 ГБ
                 });
                 setVideoFile(file);
             } catch (error) {
@@ -86,7 +107,7 @@ export function useBookletUpload() {
             try {
                 validateFile(file, {
                     allowedMimeTypes: ['application/pdf'],
-                    maxSize: 10 * 1024 * 1024
+                    maxSize: 10 * 1024 * 1024  // 10 МБ
                 });
                 setBookletFile(file);
             } catch (error) {
@@ -112,7 +133,7 @@ export function useTrackFiles() {
                 try {
                     validateFile(file, {
                         allowedExtensions: ['.wav', '.flac'],
-                        maxSize: 1 * 1024 * 1024 * 1024
+                        maxSize: 1 * 1024 * 1024 * 1024  // 1 ГБ
                     });
                     validFiles.push(file);
                 } catch (error) {

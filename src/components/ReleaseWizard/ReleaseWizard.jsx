@@ -7,9 +7,11 @@ import { useCoverUpload, useVideoUpload, useBookletUpload, useTrackFiles } from 
 import { usePersons } from '../../hooks/usePersons';
 
 import ReleaseTab from './tabs/ReleaseTab';
-import ReleaseTracks from './sections/ReleaseTracks.jsx';
 import ReviewTab from './tabs/ReviewTab';
 import WizardNavigation from './WizardNavigation.jsx';
+import PlatformsTab from "./tabs/PlatformsTab.jsx";
+import TracklistTab from "./tabs/TracklistTab.jsx";
+import {usePlatforms} from "../../hooks/usePlatforms.js";
 
 const INITIAL_FORM_DATA = {
     language: 'ru',
@@ -36,7 +38,7 @@ export default function ReleaseWizard({ onSuccess }) {
     const { getAccessToken } = useLogto();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
-
+    const { platformsData, handlePlatformChange } = usePlatforms();
     const { tabs, activeTab, currentTabIndex, setActiveTab, nextTab, prevTab } = useWizardTabs();
     const { coverImage, coverPreview, handleCoverChange, setCoverImage, setCoverPreview } = useCoverUpload();
     const { videoFile, handleVideoChange, setVideoFile } = useVideoUpload();
@@ -54,20 +56,32 @@ export default function ReleaseWizard({ onSuccess }) {
             alert('Пожалуйста, укажите название релиза');
             return false;
         }
-        if (!formData.artist.trim()) {
+
+        if (!persons[0]?.name?.trim()) {
             alert('Пожалуйста, укажите исполнителя');
             return false;
         }
+
         if (!formData.releaseDate) {
             alert('Пожалуйста, выберите дату релиза');
             return false;
         }
+
         if (!noAudioFiles && trackFiles.length === 0) {
             alert('Пожалуйста, загрузите аудио файлы или отметьте "Релиз без аудиофайлов"');
             return false;
         }
+
+        // Дополнительные проверки
+        if (!coverImage) {
+            alert('Пожалуйста, загрузите обложку релиза');
+            return false;
+        }
+
         return true;
     };
+
+
 
     const resetForm = () => {
         setFormData(INITIAL_FORM_DATA);
@@ -87,7 +101,16 @@ export default function ReleaseWizard({ onSuccess }) {
         try {
             setLoading(true);
             const token = await getAccessToken('http://localhost:8080');
-            await createRelease(token, formData, trackFiles);
+
+            // Собираем полные данные с исполнителями
+            const completeFormData = {
+                ...formData,
+                artist: persons[0]?.name || '', // Основной исполнитель
+                persons: persons, // Все исполнители
+                platformsData: platformsData, // Данные платформ
+            };
+
+            await createRelease(token, completeFormData, trackFiles, coverImage, videoFile, bookletFile);
 
             resetForm();
             alert('✅ Релиз успешно отправлен на модерацию!');
@@ -99,6 +122,7 @@ export default function ReleaseWizard({ onSuccess }) {
             setLoading(false);
         }
     };
+
 
     return (
         <div className="release-wizard-scroll">
@@ -142,7 +166,7 @@ export default function ReleaseWizard({ onSuccess }) {
                 )}
 
                 {activeTab === 'tracklist' && (
-                    <ReleaseTracks
+                    <TracklistTab
                         trackFiles={trackFiles}
                         removeTrack={removeTrack}
                         noAudioFiles={noAudioFiles}
@@ -153,9 +177,12 @@ export default function ReleaseWizard({ onSuccess }) {
                 )}
 
                 {activeTab === 'platforms' && (
-                    <>
-                        {/* Площадки и территории */}
-                    </>
+                    <PlatformsTab
+                        formData={formData}
+                        handleChange={handleChange}
+                        platformsData={platformsData}
+                        handlePlatformChange={handlePlatformChange}
+                    />
                 )}
 
                 {activeTab === 'review' && (
