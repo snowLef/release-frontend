@@ -2010,3 +2010,39 @@ select:focus {
     margin-left: 0 !important;
   }
 }
+
+/* === PAGINATION === */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 24px 0 8px;
+}
+
+.pagination-btn {
+    padding: 8px 20px;
+    border: 1px solid var(--primary-blue);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--primary-blue);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: background 0.2s, color 0.2s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: var(--primary-blue);
+    color: #fff;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.pagination-info {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}

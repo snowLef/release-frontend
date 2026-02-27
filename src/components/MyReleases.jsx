@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLogto } from '@logto/react';
 import toast from 'react-hot-toast';
 import { fetchReleases, cancelRelease, API_BASE_URL } from '../services/api.js';
@@ -10,22 +10,25 @@ export default function MyReleases() {
     const [error, setError] = useState(null);
     const [expandedId, setExpandedId] = useState(null);
     const [actionLoading, setActionLoading] = useState(null);
-    const isInitialMount = useRef(true);
+    const PAGE_SIZE = 20;
+    const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [totalElements, setTotalElements] = useState(0);
 
     useEffect(() => {
-        if (!isInitialMount.current) return;
-
         let isMounted = true;
 
         const loadData = async () => {
             if (!getAccessToken) return;
             try {
                 setLoading(true);
+                setError(null);
                 const token = await getAccessToken(API_BASE_URL);
-                const data = await fetchReleases(token);
+                const data = await fetchReleases(token, page, PAGE_SIZE);
                 if (isMounted) {
-                    setReleases(data);
-                    isInitialMount.current = false;
+                    setReleases(Array.isArray(data) ? data : (data.content ?? []));
+                    setTotalPages(data.totalPages ?? 0);
+                    setTotalElements(data.totalElements ?? 0);
                 }
             } catch (e) {
                 console.error("Ошибка:", e);
@@ -37,7 +40,7 @@ export default function MyReleases() {
 
         loadData();
         return () => { isMounted = false; };
-    }, []);
+    }, [page]);
 
     const toggleExpand = (id) => {
         setExpandedId(expandedId === id ? null : id);
@@ -125,6 +128,7 @@ export default function MyReleases() {
     }
 
     return (
+        <>
         <div className="requests-list fade-in">
             {releases.map((release) => {
                 const isExpanded = expandedId === release.id;
@@ -267,5 +271,28 @@ export default function MyReleases() {
                 );
             })}
         </div>
+
+        {totalPages > 1 && (
+            <div className="pagination">
+                <button
+                    className="pagination-btn"
+                    onClick={() => setPage(p => p - 1)}
+                    disabled={page === 0}
+                >
+                    ← Назад
+                </button>
+                <span className="pagination-info">
+                    Страница {page + 1} из {totalPages}
+                </span>
+                <button
+                    className="pagination-btn"
+                    onClick={() => setPage(p => p + 1)}
+                    disabled={page >= totalPages - 1}
+                >
+                    Вперёд →
+                </button>
+            </div>
+        )}
+        </>
     );
 }

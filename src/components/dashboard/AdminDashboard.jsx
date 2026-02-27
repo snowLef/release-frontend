@@ -11,23 +11,34 @@ export default function AdminDashboard({ user, scopes, onLogout }) {
     const [expandedId, setExpandedId] = useState(null);
     const [actionLoading, setActionLoading] = useState(null);
     const [filter, setFilter] = useState('ALL');
+    const PAGE_SIZE = 20;
+    const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [totalElements, setTotalElements] = useState(0);
 
     useEffect(() => {
         loadReleases();
-    }, []);
+    }, [page]);
 
     const loadReleases = async () => {
         try {
             setLoading(true);
             const token = await getAccessToken(API_BASE_URL);
-            const data = await fetchAllReleases(token);
-            setReleases(data);
+            const data = await fetchAllReleases(token, page, PAGE_SIZE);
+            setReleases(data.content);
+            setTotalPages(data.totalPages);
+            setTotalElements(data.totalElements);
         } catch (e) {
             console.error('Ошибка загрузки:', e);
             toast.error('Ошибка загрузки релизов: ' + e.message);
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleFilterChange = (status) => {
+        setFilter(status);
+        setPage(0);
     };
 
     const handleStatusChange = async (releaseId, newStatus) => {
@@ -97,25 +108,19 @@ export default function AdminDashboard({ user, scopes, onLogout }) {
             <Header user={user} scopes={scopes} onLogout={onLogout} />
 
             <div className="admin-stats">
-                <h3>Всего релизов: {releases.length}</h3>
+                <h3>Всего релизов: {totalElements}</h3>
 
                 {/* Фильтры */}
                 <div className="filter-buttons">
-                    {['ALL', 'PENDING', 'SENT_TO_ZVONKO', 'REJECTED', 'CANCELLED'].map(status => {
-                        const count = status === 'ALL'
-                            ? releases.length
-                            : releases.filter(r => r.status === status).length;
-
-                        return (
-                            <button
-                                key={status}
-                                onClick={() => setFilter(status)}
-                                className={`filter-btn${filter === status ? ' active' : ''}`}
-                            >
-                                {status === 'ALL' ? '📋 Все' : getStatusText(status)} ({count})
-                            </button>
-                        );
-                    })}
+                    {['ALL', 'PENDING', 'SENT_TO_ZVONKO', 'REJECTED', 'CANCELLED'].map(status => (
+                        <button
+                            key={status}
+                            onClick={() => handleFilterChange(status)}
+                            className={`filter-btn${filter === status ? ' active' : ''}`}
+                        >
+                            {status === 'ALL' ? '📋 Все' : getStatusText(status)}
+                        </button>
+                    ))}
                 </div>
 
                 {/* Подсказка */}
@@ -125,7 +130,7 @@ export default function AdminDashboard({ user, scopes, onLogout }) {
             </div>
 
             {/* СПИСОК РЕЛИЗОВ С КНОПКАМИ */}
-            <div className="requests-list fade-in">
+            <div className="requests-list fade-in" key={page}>
                 {filteredReleases.length === 0 ? (
                     <div className="empty-state">
                         <p className="empty-state-icon">📭</p>
@@ -241,6 +246,28 @@ export default function AdminDashboard({ user, scopes, onLogout }) {
                     })
                 )}
             </div>
+
+            {totalPages > 1 && (
+                <div className="pagination">
+                    <button
+                        className="pagination-btn"
+                        onClick={() => setPage(p => p - 1)}
+                        disabled={page === 0}
+                    >
+                        ← Назад
+                    </button>
+                    <span className="pagination-info">
+                        Страница {page + 1} из {totalPages}
+                    </span>
+                    <button
+                        className="pagination-btn"
+                        onClick={() => setPage(p => p + 1)}
+                        disabled={page >= totalPages - 1}
+                    >
+                        Вперёд →
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

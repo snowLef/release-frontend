@@ -38,10 +38,10 @@ export const createRelease = async (token, releaseData, file) => {
 /**
  * Получение списка релизов
  */
-export const fetchReleases = async (token) => {
+export const fetchReleases = async (token, page = 0, size = 20) => {
     console.log('🌐 fetchReleases вызван с токеном:', token ? 'Есть' : 'Нет');
 
-    const response = await fetch(API_URL, {
+    const response = await fetch(`${API_URL}?page=${page}&size=${size}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -63,8 +63,8 @@ export const fetchReleases = async (token) => {
 };
 
 // ✅ Получить все релизы (для админа) - используем общий эндпоинт
-export async function fetchAllReleases(token) {
-    const response = await fetch(API_URL, {
+export async function fetchAllReleases(token, page = 0, size = 20) {
+    const response = await fetch(`${API_URL}?page=${page}&size=${size}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
