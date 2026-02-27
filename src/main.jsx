@@ -9,10 +9,10 @@ import './styles/index.css';
 import './styles/components/platforms.css';
 
 const config = {
-    endpoint: 'https://ruhxnl.logto.app/', // Проверь этот URL в консоли Logto!
-    appId: 'acojh09ckmpo5pm2j0wvw', // Замени на реальный ID из Logto
-    resources: ['http://localhost:8080'], // Твой API Identifier
-    scopes: ['read:releases', 'api:admin'], // 'roles' для ID токена, 'read:releases' для Access Token
+    endpoint: import.meta.env.VITE_LOGTO_ENDPOINT,
+    appId: import.meta.env.VITE_LOGTO_APP_ID,
+    resources: [import.meta.env.VITE_API_URL],
+    scopes: ['read:releases', 'api:admin'],
 };
 
 ReactDOM.createRoot(document.getElementById('root')).render(

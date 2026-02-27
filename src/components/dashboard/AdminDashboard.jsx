@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLogto } from '@logto/react';
 import toast from 'react-hot-toast';
-import { fetchAllReleases, updateReleaseStatus } from '../../services/api.js';
+import { fetchAllReleases, updateReleaseStatus, API_BASE_URL } from '../../services/api.js';
 import Header from '../common/Header.jsx';
 
 export default function AdminDashboard({ user, scopes, onLogout }) {
@@ -19,7 +19,7 @@ export default function AdminDashboard({ user, scopes, onLogout }) {
     const loadReleases = async () => {
         try {
             setLoading(true);
-            const token = await getAccessToken('http://localhost:8080');
+            const token = await getAccessToken(API_BASE_URL);
             const data = await fetchAllReleases(token);
             setReleases(data);
         } catch (e) {
@@ -41,7 +41,7 @@ export default function AdminDashboard({ user, scopes, onLogout }) {
 
         try {
             setActionLoading(releaseId);
-            const token = await getAccessToken('http://localhost:8080');
+            const token = await getAccessToken(API_BASE_URL);
             await updateReleaseStatus(token, releaseId, newStatus);
 
             setReleases(releases.map(r =>

@@ -1,6 +1,7 @@
 import { useLogto } from '@logto/react';
 import { useState, useEffect, useRef } from 'react';
 
+import { API_BASE_URL } from './services/api.js';
 import Callback from './components/auth/Callback.jsx';
 import UserDashboard from './components/dashboard/UserDashboard.jsx';
 import AdminDashboard from './components/dashboard/AdminDashboard.jsx';
@@ -20,7 +21,7 @@ function App() {
     } = useLogto();
 
     const handleLogout = () => {
-        signOut('http://localhost:5173');
+        signOut(import.meta.env.VITE_APP_URL);
     };
 
     /**
@@ -35,7 +36,7 @@ function App() {
                 const idClaims = await getIdTokenClaims();
 
                 // Получаем Access Token (там есть scopes)
-                const accessToken = await getAccessToken('http://localhost:8080');
+                const accessToken = await getAccessToken(API_BASE_URL);
 
                 // Декодируем Access Token чтобы получить scopes
                 const tokenParts = accessToken.split('.');
@@ -99,7 +100,7 @@ function App() {
                 <h1>Bomjegrom Production</h1>
                 <button
                     className="btn-primary"
-                    onClick={() => signIn('http://localhost:5173/callback')}
+                    onClick={() => signIn(`${import.meta.env.VITE_APP_URL}/callback`)}
                 >
                     Войти через Logto
                 </button>

@@ -1,5 +1,6 @@
 // src/api.js
-const API_URL = 'http://localhost:8080/api/releases';
+export const API_BASE_URL = import.meta.env.VITE_API_URL;
+const API_URL = `${API_BASE_URL}/api/releases`;
 
 /**
  * Отправка нового релиза
@@ -63,7 +64,7 @@ export const fetchReleases = async (token) => {
 
 // ✅ Получить все релизы (для админа) - используем общий эндпоинт
 export async function fetchAllReleases(token) {
-    const response = await fetch('http://localhost:8080/api/releases', { // ✅ Изменили URL
+    const response = await fetch(API_URL, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -80,7 +81,7 @@ export async function fetchAllReleases(token) {
 
 // ✅ Изменить статус релиза (для админа)
 export async function updateReleaseStatus(token, releaseId, status) {
-    const response = await fetch(`http://localhost:8080/api/releases/${releaseId}/status?status=${status}`, { // ✅ Добавили query параметр
+    const response = await fetch(`${API_URL}/${releaseId}/status?status=${status}`, {
         method: 'PATCH',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -99,7 +100,7 @@ export async function updateReleaseStatus(token, releaseId, status) {
 
 // Отозвать заявку (для артиста)
 export async function cancelRelease(token, releaseId) {
-    const response = await fetch(`http://localhost:8080/api/releases/${releaseId}`, {
+    const response = await fetch(`${API_URL}/${releaseId}`, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${token}`,

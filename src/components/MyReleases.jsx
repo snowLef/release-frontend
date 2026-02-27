@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLogto } from '@logto/react';
 import toast from 'react-hot-toast';
-import { fetchReleases, cancelRelease } from '../services/api.js';
+import { fetchReleases, cancelRelease, API_BASE_URL } from '../services/api.js';
 
 export default function MyReleases() {
     const { getAccessToken } = useLogto();
@@ -21,7 +21,7 @@ export default function MyReleases() {
             if (!getAccessToken) return;
             try {
                 setLoading(true);
-                const token = await getAccessToken('http://localhost:8080');
+                const token = await getAccessToken(API_BASE_URL);
                 const data = await fetchReleases(token);
                 if (isMounted) {
                     setReleases(data);
@@ -48,7 +48,7 @@ export default function MyReleases() {
 
         try {
             setActionLoading(releaseId);
-            const token = await getAccessToken('http://localhost:8080');
+            const token = await getAccessToken(API_BASE_URL);
             await cancelRelease(token, releaseId);
 
             setReleases(releases.filter(r => r.id !== releaseId));

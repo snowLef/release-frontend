@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLogto } from '@logto/react';
 import toast from 'react-hot-toast';
-import { createRelease } from '../../services/api.js';
+import { createRelease, API_BASE_URL } from '../../services/api.js';
 
 import { useWizardTabs } from '../../hooks/useWizardTabs';
 import { useCoverUpload, useVideoUpload, useBookletUpload, useTrackFiles } from '../../hooks/useFileUpload';
@@ -101,7 +101,7 @@ export default function ReleaseWizard({ onSuccess }) {
 
         try {
             setLoading(true);
-            const token = await getAccessToken('http://localhost:8080');
+            const token = await getAccessToken(API_BASE_URL);
 
             // Собираем полные данные с исполнителями
             const completeFormData = {
