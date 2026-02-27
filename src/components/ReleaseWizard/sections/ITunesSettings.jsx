@@ -1,6 +1,8 @@
 import React from 'react';
+import { useWizard } from '../../../contexts/WizardContext';
 
-export default function ITunesSettings({ platformData, handlePlatformChange }) {
+export default function ITunesSettings({ platformData }) {
+    const { handlePlatformChange } = useWizard();
     const releasePriceCategories = [
         { value: '', label: 'Выберите категорию' },
         { value: 'mini_ep', label: 'Mini EP - 39,00 ₽', price: 39 },

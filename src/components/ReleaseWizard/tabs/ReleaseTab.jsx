@@ -10,37 +10,19 @@ import ReleasePlatforms from '../sections/ReleasePlatforms.jsx';
 import ReleaseVideo from '../sections/ReleaseVideo.jsx';
 import ReleaseBooklet from '../sections/ReleaseBooklet.jsx';
 
-export default function ReleaseTab({
-                                       formData,
-                                       handleChange,
-                                       coverPreview,
-                                       handleCoverChange,
-                                       persons,
-                                       handlePersonChange,
-                                       addPerson,
-                                       removePerson,
-                                       handleVideoChange,
-                                       videoFile,
-                                       handleBookletChange,
-                                       bookletFile
-                                   }) {
+export default function ReleaseTab() {
     return (
         <>
-            <BasicInfoSection formData={formData} handleChange={handleChange} />
-            <ReleaseCover coverPreview={coverPreview} handleChange={handleCoverChange} />
-            <ReleasePersons
-                persons={persons}
-                handlePersonChange={handlePersonChange}
-                addPerson={addPerson}
-                removePerson={removePerson}
-            />
-            <ReleaseGenre formData={formData} handleChange={handleChange} />
-            <ReleaseIdentification formData={formData} handleChange={handleChange} />
-            <ReleaseLabel formData={formData} handleChange={handleChange} />
-            <ReleaseDates formData={formData} handleChange={handleChange} />
-            <ReleasePlatforms formData={formData} handleChange={handleChange} />
-            <ReleaseVideo handleVideoChange={handleVideoChange} videoFile={videoFile} />
-            <ReleaseBooklet handleBookletChange={handleBookletChange} bookletFile={bookletFile} />
+            <BasicInfoSection />
+            <ReleaseCover />
+            <ReleasePersons />
+            <ReleaseGenre />
+            <ReleaseIdentification />
+            <ReleaseLabel />
+            <ReleaseDates />
+            <ReleasePlatforms />
+            <ReleaseVideo />
+            <ReleaseBooklet />
         </>
     );
 }

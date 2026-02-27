@@ -1,6 +1,8 @@
 import React from 'react';
+import { useWizard } from '../../../contexts/WizardContext';
 
-export default function ReleaseGenre({formData, handleChange}) {
+export default function ReleaseGenre() {
+    const { formData, handleChange } = useWizard();
     return (
         /* СЕКЦИЯ 4: Жанр и поджанр */
     <div className="form-card">

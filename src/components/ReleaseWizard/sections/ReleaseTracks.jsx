@@ -1,6 +1,9 @@
 import React from 'react';
+import { useWizard } from '../../../contexts/WizardContext';
 
-export default function ReleaseTracks({trackFiles, removeTrack, noAudioFiles, handleFileChange, setNoAudioFiles, setTrackFiles}) {
+export default function ReleaseTracks() {
+    const { trackFiles, removeTrack, noAudioFiles, handleFileChange, setNoAudioFiles, setTrackFiles } = useWizard();
+
     return (
         /* СЕКЦИЯ: Загрузка треков */
         <div className="form-card">
@@ -23,7 +26,6 @@ export default function ReleaseTracks({trackFiles, removeTrack, noAudioFiles, ha
                     </div>
                 </div>
 
-                {/* Список загруженных треков */}
                 {trackFiles.length > 0 && (
                     <div className="tracks-list">
                         {trackFiles.map((file, index) => (
@@ -33,8 +35,8 @@ export default function ReleaseTracks({trackFiles, removeTrack, noAudioFiles, ha
                                     <div className="track-details">
                                         <span className="track-name">{file.name}</span>
                                         <span className="track-size">
-                                                    {(file.size / 1024 / 1024).toFixed(2)} МБ
-                                                </span>
+                                            {(file.size / 1024 / 1024).toFixed(2)} МБ
+                                        </span>
                                     </div>
                                 </div>
                                 <button
@@ -50,7 +52,6 @@ export default function ReleaseTracks({trackFiles, removeTrack, noAudioFiles, ha
                     </div>
                 )}
 
-                {/* Зона загрузки */}
                 <label className={`tracks-upload-area ${noAudioFiles ? 'disabled' : ''}`}>
                     <input
                         type="file"
@@ -64,17 +65,16 @@ export default function ReleaseTracks({trackFiles, removeTrack, noAudioFiles, ha
                         <div className="icon-tracks">📁</div>
                     </div>
                     <span className="upload-title">
-                                {trackFiles.length > 0
-                                    ? "Добавить еще треки"
-                                    : "Перенесите файлы сюда или нажмите, чтобы загрузить"
-                                }
-                            </span>
+                        {trackFiles.length > 0
+                            ? "Добавить еще треки"
+                            : "Перенесите файлы сюда или нажмите, чтобы загрузить"
+                        }
+                    </span>
                     <span className="upload-subtitle">
-                                Формат: .wav, .flac • Максимальный размер: 1 ГБ
-                            </span>
+                        Формат: .wav, .flac • Максимальный размер: 1 ГБ
+                    </span>
                 </label>
 
-                {/* Чекбокс "Релиз без аудиофайлов" */}
                 <div className="no-audio-checkbox">
                     <label className="checkbox-label">
                         <input
@@ -89,8 +89,8 @@ export default function ReleaseTracks({trackFiles, removeTrack, noAudioFiles, ha
                             className="checkbox-input"
                         />
                         <span className="checkbox-text">
-                                    Загрузка релиза без аудиофайлов
-                                </span>
+                            Загрузка релиза без аудиофайлов
+                        </span>
                     </label>
                     <p className="checkbox-hint">
                         Отметьте, если вы хотите создать релиз без загрузки аудио

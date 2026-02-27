@@ -1,16 +1,17 @@
 import React from 'react';
+import { useWizard } from '../../../contexts/WizardContext';
 
 export default function PlatformSettings({
                                              title,
                                              description,
                                              platformKey,
                                              platformData,
-                                             handlePlatformChange,
                                              showAvailableCheckbox = true,
-                                             showTime = false,  // ← этот проп теперь контролирует отображение времени
+                                             showTime = false,
                                              showUpcoming = false,
                                              showFullVersion = false
                                          }) {
+    const { handlePlatformChange } = useWizard();
     return (
         <div className="form-card">
             <div className="card-header">

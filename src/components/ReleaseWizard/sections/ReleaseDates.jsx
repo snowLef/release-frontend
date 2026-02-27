@@ -1,6 +1,8 @@
 import React from 'react';
+import { useWizard } from '../../../contexts/WizardContext';
 
-export default function ReleaseDates({formData, handleChange}) {
+export default function ReleaseDates() {
+    const { formData, handleChange } = useWizard();
     return (
         /* СЕКЦИЯ 7: Даты */
         <div className="form-card">

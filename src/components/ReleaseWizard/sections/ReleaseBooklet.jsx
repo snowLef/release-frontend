@@ -1,6 +1,9 @@
 import React from 'react';
+import { useWizard } from '../../../contexts/WizardContext';
 
-export default function ReleaseBooklet({handleBookletChange, bookletFile}) {
+export default function ReleaseBooklet() {
+    const { bookletFile, handleBookletChange } = useWizard();
+
     return (
         /* СЕКЦИЯ 10: Сопроводительные материалы */
         <div className="form-card">
@@ -47,15 +50,15 @@ export default function ReleaseBooklet({handleBookletChange, bookletFile}) {
                     />
                     <div className="booklet-icon">📄</div>
                     <span className="upload-title">
-                                {bookletFile
-                                    ? bookletFile.name
-                                    : "Перенесите файлы сюда или нажмите, чтобы загрузить"
-                                }
-                            </span>
+                        {bookletFile
+                            ? bookletFile.name
+                            : "Перенесите файлы сюда или нажмите, чтобы загрузить"
+                        }
+                    </span>
                     {bookletFile && (
                         <span className="upload-subtitle">
-                                    Размер: {(bookletFile.size / 1024 / 1024).toFixed(2)} МБ
-                                </span>
+                            Размер: {(bookletFile.size / 1024 / 1024).toFixed(2)} МБ
+                        </span>
                     )}
                 </label>
             </div>

@@ -1,6 +1,8 @@
 import React from 'react';
+import { useWizard } from '../../../contexts/WizardContext';
 
-export default function ReleaseIdentification({formData, handleChange}) {
+export default function ReleaseIdentification() {
+    const { formData, handleChange } = useWizard();
     return (
         /* СЕКЦИЯ 5: Идентификация */
         <div className="form-card">

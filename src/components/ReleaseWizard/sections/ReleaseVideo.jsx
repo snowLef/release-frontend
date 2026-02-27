@@ -1,6 +1,9 @@
 import React from 'react';
+import { useWizard } from '../../../contexts/WizardContext';
 
-export default function ReleaseVideo({handleVideoChange, videoFile}) {
+export default function ReleaseVideo() {
+    const { videoFile, handleVideoChange } = useWizard();
+
     return (
         /* СЕКЦИЯ 9: Загрузка видео */
         <div className="form-card">
@@ -45,14 +48,14 @@ export default function ReleaseVideo({handleVideoChange, videoFile}) {
                         </div>
                     </div>
                     <span className="upload-title">
-                                {videoFile ? videoFile.name : "Загрузить файл"}
-                            </span>
+                        {videoFile ? videoFile.name : "Загрузить файл"}
+                    </span>
                     <span className="upload-subtitle">
-                                {videoFile
-                                    ? `Размер: ${(videoFile.size / 1024 / 1024 / 1024).toFixed(2)} ГБ`
-                                    : "Перетащите файл сюда или нажмите для выбора"
-                                }
-                            </span>
+                        {videoFile
+                            ? `Размер: ${(videoFile.size / 1024 / 1024 / 1024).toFixed(2)} ГБ`
+                            : "Перетащите файл сюда или нажмите для выбора"
+                        }
+                    </span>
                 </label>
             </div>
         </div>

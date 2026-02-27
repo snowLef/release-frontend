@@ -1,6 +1,8 @@
 import React from 'react';
+import { useWizard } from '../../../contexts/WizardContext';
 
-export default function ReleasePlatforms({formData, handleChange}) {
+export default function ReleasePlatforms() {
+    const { formData, handleChange } = useWizard();
     return (
         /* СЕКЦИЯ 8: Площадки и территории */
         <div className="form-card">

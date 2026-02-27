@@ -1,6 +1,8 @@
 import React from 'react';
+import { useWizard } from '../../../contexts/WizardContext';
 
-export default function ReleasePersons({persons, handlePersonChange, removePerson, addPerson}) {
+export default function ReleasePersons() {
+    const { persons, handlePersonChange, addPerson, removePerson } = useWizard();
     return (
         /* СЕКЦИЯ 3: Персоны и роли */
         <div className="form-card">

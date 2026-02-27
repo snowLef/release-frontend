@@ -1,6 +1,9 @@
 import React from 'react';
+import { useWizard } from '../../../contexts/WizardContext';
 
-export default function ReviewTab({ formData, persons, trackFiles, noAudioFiles }) {
+export default function ReviewTab() {
+    const { formData, persons, trackFiles, noAudioFiles } = useWizard();
+
     return (
         <div className="form-card">
             <div className="card-header">

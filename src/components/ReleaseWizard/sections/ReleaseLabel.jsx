@@ -1,6 +1,8 @@
 import React from 'react';
+import { useWizard } from '../../../contexts/WizardContext';
 
-export default function ReleaseLabel({formData, handleChange}) {
+export default function ReleaseLabel() {
+    const { formData, handleChange } = useWizard();
     return (
         /* СЕКЦИЯ 6: Название лейбла */
         <div className="form-card">

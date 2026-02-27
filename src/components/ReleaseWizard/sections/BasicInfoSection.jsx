@@ -1,6 +1,8 @@
 import React from 'react';
+import { useWizard } from '../../../contexts/WizardContext';
 
-export default function BasicInfoSection({ formData, handleChange }) {
+export default function BasicInfoSection() {
+    const { formData, handleChange } = useWizard();
     return (
         /* СЕКЦИЯ 1: Основная информация */
         <div className="form-card">

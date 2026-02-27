@@ -1,11 +1,9 @@
 import React from 'react';
+import { useWizard } from '../../../contexts/WizardContext';
 
-export default function AdditionalPlatformSettings({
-                                                       formData,
-                                                       handleChange,
-                                                       platformsData,
-                                                       handlePlatformChange
-                                                   }) {
+export default function AdditionalPlatformSettings() {
+    const { formData, handleChange } = useWizard();
+
     const handleCheckboxChange = (name, checked) => {
         handleChange({
             target: { name, value: checked }
@@ -23,7 +21,6 @@ export default function AdditionalPlatformSettings({
 
             <div className="card-body">
                 <div className="platforms-layout">
-                    {/* Левая часть - дополнительные настройки */}
                     <div className="additional-settings">
                         <h3 className="settings-subtitle">Дополнительные настройки</h3>
 

@@ -1,7 +1,9 @@
-// ReleaseCover.jsx
 import React from 'react';
+import { useWizard } from '../../../contexts/WizardContext';
 
-export default function ReleaseCover({ coverPreview, handleChange }) {
+export default function ReleaseCover() {
+    const { coverPreview, handleCoverChange } = useWizard();
+
     return (
         <div className="form-card">
             <div className="card-header">
@@ -31,7 +33,7 @@ export default function ReleaseCover({ coverPreview, handleChange }) {
                         id="cover-upload"
                         type="file"
                         accept="image/jpeg,image/png"
-                        onChange={handleChange}
+                        onChange={handleCoverChange}
                         style={{ display: 'none' }}
                     />
                 </div>
