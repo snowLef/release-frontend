@@ -117,18 +117,26 @@ export default function MyReleases() {
 
     if (!releases || releases.length === 0) {
         return (
-            <div className="form-card" style={{textAlign: 'center', padding: '3rem'}}>
-                <p style={{fontSize: '4rem', margin: '0 0 1rem 0'}}>🎵</p>
-                <h3 style={{marginBottom: '0.5rem'}}>У вас пока нет загруженных релизов</h3>
-                <p style={{color: 'var(--text-muted)'}}>
-                    Перейдите во вкладку "Создать релиз", чтобы начать!
-                </p>
-            </div>
+            <>
+                <div className="page-title-section">
+                    <h1 className="page-title no-icon">Мои релизы</h1>
+                </div>
+                <div className="form-card" style={{textAlign: 'center', padding: '3rem'}}>
+                    <p style={{fontSize: '4rem', margin: '0 0 1rem 0'}}>🎵</p>
+                    <h3 style={{marginBottom: '0.5rem'}}>У вас пока нет загруженных релизов</h3>
+                    <p style={{color: 'var(--text-muted)'}}>
+                        Нажмите «+ Создать релиз», чтобы начать!
+                    </p>
+                </div>
+            </>
         );
     }
 
     return (
         <>
+        <div className="page-title-section">
+            <h1 className="page-title no-icon">Мои релизы</h1>
+        </div>
         <div className="requests-list fade-in">
             {releases.map((release) => {
                 const isExpanded = expandedId === release.id;

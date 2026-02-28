@@ -9,49 +9,58 @@ import WizardNavigation from './WizardNavigation.jsx';
 function WizardContent() {
     const { tabs, activeTab, setActiveTab, currentTabIndex, nextTab, prevTab, loading, handleSubmit } = useWizard();
 
+    const tabLabels = {
+        release: 'Релиз',
+        tracklist: 'Трек-лист',
+        platforms: 'Площадки',
+        review: 'Проверка',
+    };
+
     return (
         <div className="release-wizard-scroll">
-            <div className="page-title-section">
-                <h1 className="page-title">Работа с релизом</h1>
-                <p className="page-subtitle">Заполните общую информацию по релизу</p>
+            <div className="wizard-layout">
+                <aside className="wizard-sidebar">
+                    <nav className="wizard-tabs">
+                        {tabs.map((tab, index) => (
+                            <button
+                                key={tab}
+                                type="button"
+                                className={`wizard-tab ${activeTab === tab ? 'active' : ''}`}
+                                onClick={() => setActiveTab(tab)}
+                            >
+                                <span className="wizard-tab-num">{index + 1}</span>
+                                {tabLabels[tab]}
+                            </button>
+                        ))}
+                    </nav>
+                </aside>
+
+                <div className="wizard-main">
+                    <div className="page-title-section">
+                        <h1 className="page-title">Новый релиз</h1>
+                    </div>
+                    <form onSubmit={handleSubmit} className="release-form-long">
+                        {activeTab === 'release' && <ReleaseTab />}
+                        {activeTab === 'tracklist' && <TracklistTab />}
+                        {activeTab === 'platforms' && <PlatformsTab />}
+                        {activeTab === 'review' && <ReviewTab />}
+
+                        <WizardNavigation
+                            currentTabIndex={currentTabIndex}
+                            tabsLength={tabs.length}
+                            prevTab={prevTab}
+                            nextTab={nextTab}
+                            loading={loading}
+                        />
+
+                        {activeTab === 'review' && (
+                            <p className="submit-hint" style={{ textAlign: 'center', marginTop: '1rem' }}>
+                                После отправки релиз будет проверен модератором в течение 24-48 часов
+                            </p>
+                        )}
+                    </form>
+                </div>
             </div>
-
-            <div className="wizard-tabs">
-                {tabs.map(tab => (
-                    <button
-                        key={tab}
-                        type="button"
-                        className={`wizard-tab ${activeTab === tab ? 'active' : ''}`}
-                        onClick={() => setActiveTab(tab)}
-                    >
-                        {tab === 'release' && 'Релиз'}
-                        {tab === 'tracklist' && 'Трек-лист'}
-                        {tab === 'platforms' && 'Площадки'}
-                        {tab === 'review' && 'Проверка'}
-                    </button>
-                ))}
-            </div>
-
-            <form onSubmit={handleSubmit} className="release-form-long">
-                {activeTab === 'release' && <ReleaseTab />}
-                {activeTab === 'tracklist' && <TracklistTab />}
-                {activeTab === 'platforms' && <PlatformsTab />}
-                {activeTab === 'review' && <ReviewTab />}
-
-                <WizardNavigation
-                    currentTabIndex={currentTabIndex}
-                    tabsLength={tabs.length}
-                    prevTab={prevTab}
-                    nextTab={nextTab}
-                    loading={loading}
-                />
-
-                {activeTab === 'review' && (
-                    <p className="submit-hint" style={{ textAlign: 'center', marginTop: '1rem' }}>
-                        После отправки релиз будет проверен модератором в течение 24-48 часов
-                    </p>
-                )}
-            </form>
         </div>
     );
 }

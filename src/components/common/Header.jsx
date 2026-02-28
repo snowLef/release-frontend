@@ -37,26 +37,16 @@ export default function Header({ user, scopes = [], onLogout, activeTab, onTabCh
                     </div>
                 </div>
 
-                {/* Центр - Навигация */}
-                {onTabChange && (
-                    <nav className="header-nav">
-                        <button
-                            className={`header-nav-btn ${activeTab === 'create' ? 'active' : ''}`}
-                            onClick={() => onTabChange('create')}
-                        >
-                            ➕ Создать релиз
-                        </button>
-                        <button
-                            className={`header-nav-btn ${activeTab === 'list' ? 'active' : ''}`}
-                            onClick={() => onTabChange('list')}
-                        >
-                            📋 Мои релизы
-                        </button>
-                    </nav>
-                )}
-
                 {/* Правая часть - Пользователь */}
                 <div className="header-right" ref={dropdownRef}>
+                    {onTabChange && (
+                        <button
+                            className={`header-create-btn ${activeTab === 'create' ? 'active' : ''}`}
+                            onClick={() => onTabChange('create')}
+                        >
+                            + Создать релиз
+                        </button>
+                    )}
                     <div
                         className="user-menu-trigger"
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -103,6 +93,22 @@ export default function Header({ user, scopes = [], onLogout, activeTab, onTabCh
                             <div className="dropdown-divider"></div>
 
                             <div className="dropdown-menu">
+                                {onTabChange && (
+                                    <button className={`dropdown-item ${activeTab === 'list' ? 'active' : ''}`} onClick={() => {
+                                        setIsDropdownOpen(false);
+                                        onTabChange('list');
+                                    }}>
+                                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                            <path d="M2.25 4.5H15.75M2.25 9H15.75M2.25 13.5H9.75"
+                                                  stroke="currentColor"
+                                                  strokeWidth="1.5"
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"/>
+                                        </svg>
+                                        <span>Мои релизы</span>
+                                    </button>
+                                )}
+
                                 <button className="dropdown-item" onClick={() => {
                                     setIsDropdownOpen(false);
                                     // TODO: Добавить редактирование профиля
