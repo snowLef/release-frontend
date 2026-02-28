@@ -571,6 +571,17 @@ body {
   color: var(--text-muted);
 }
 
+.payment-badge-succeeded {
+  padding: 0.35rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid rgba(82, 164, 71, 0.3);
+}
+
 /* === FORM ELEMENTS === */
 .form-section {
   margin-bottom: 2.5rem;

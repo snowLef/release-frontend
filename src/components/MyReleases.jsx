@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLogto } from '@logto/react';
 import toast from 'react-hot-toast';
-import { fetchReleases, cancelRelease, API_BASE_URL } from '../services/api.js';
+import { fetchReleases, cancelRelease, createPayment, API_BASE_URL } from '../services/api.js';
 
 export default function MyReleases() {
     const { getAccessToken } = useLogto();
@@ -44,6 +44,22 @@ export default function MyReleases() {
 
     const toggleExpand = (id) => {
         setExpandedId(expandedId === id ? null : id);
+    };
+
+    const handlePay = async (release) => {
+        try {
+            setActionLoading(release.id);
+            const token = await getAccessToken(API_BASE_URL);
+            const { confirmation_url } = await createPayment(
+                token,
+                release.id,
+                `${release.artist?.trim() || 'Артист'} — ${release.title?.trim() || 'Релиз'}`
+            );
+            window.location.href = confirmation_url;
+        } catch (e) {
+            toast.error('Ошибка оплаты: ' + e.message);
+            setActionLoading(null);
+        }
     };
 
     const handleCancel = async (releaseId) => {
@@ -188,6 +204,9 @@ export default function MyReleases() {
                                 <span className={`status-badge status-${release.status.toLowerCase()}`}>
                                     {getStatusText(release.status)}
                                 </span>
+                                {release.paymentStatus === 'SUCCEEDED' && (
+                                    <span className="payment-badge-succeeded">✓ Оплачен</span>
+                                )}
                                 <span style={{
                                     fontSize: '1.2rem',
                                     transition: 'transform 0.3s',
@@ -243,8 +262,24 @@ export default function MyReleases() {
                                 {release.status === 'PENDING' && (
                                     <div style={{
                                         paddingTop: '1rem',
-                                        borderTop: '2px solid var(--border)'
+                                        borderTop: '2px solid var(--border)',
+                                        display: 'flex',
+                                        gap: '0.75rem',
+                                        flexWrap: 'wrap'
                                     }}>
+                                        {release.paymentStatus !== 'SUCCEEDED' && (
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handlePay(release);
+                                                }}
+                                                disabled={isProcessing}
+                                                className="btn-primary"
+                                                style={{ opacity: isProcessing ? 0.5 : 1 }}
+                                            >
+                                                {isProcessing ? 'Переход...' : '💳 Оплатить (999 ₽)'}
+                                            </button>
+                                        )}
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
@@ -252,9 +287,7 @@ export default function MyReleases() {
                                             }}
                                             disabled={isProcessing}
                                             className="btn-danger"
-                                            style={{
-                                                opacity: isProcessing ? 0.5 : 1
-                                            }}
+                                            style={{ opacity: isProcessing ? 0.5 : 1 }}
                                         >
                                             {isProcessing ? 'Отзыв...' : '🗑️ Отозвать заявку'}
                                         </button>

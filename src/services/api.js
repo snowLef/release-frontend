@@ -98,6 +98,46 @@ export async function updateReleaseStatus(token, releaseId, status) {
     return await response.json();
 }
 
+// Создать платёж (ЮKassa)
+export async function createPayment(token, releaseId, releaseTitle) {
+    const response = await fetch(`${API_BASE_URL}/api/payments`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            amount: '999.00',
+            description: `Публикация релиза: ${releaseTitle}`,
+            releaseId,
+            returnUrl: `${window.location.origin}/payment-return?releaseId=${releaseId}`
+        })
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+    }
+
+    return response.json();
+}
+
+// Синхронизировать статус платежа с YooKassa
+export async function syncPayment(token, releaseId) {
+    const response = await fetch(`${API_BASE_URL}/api/payments/sync/${releaseId}`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+    }
+
+    return response.json();
+}
+
 // Отозвать заявку (для артиста)
 export async function cancelRelease(token, releaseId) {
     const response = await fetch(`${API_URL}/${releaseId}`, {

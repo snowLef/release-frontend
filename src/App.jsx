@@ -5,6 +5,7 @@ import { API_BASE_URL } from './services/api.js';
 import Callback from './components/auth/Callback.jsx';
 import UserDashboard from './components/dashboard/UserDashboard.jsx';
 import AdminDashboard from './components/dashboard/AdminDashboard.jsx';
+import PaymentReturn from './components/PaymentReturn.jsx';
 
 function App() {
     const [user, setUser] = useState(null);
@@ -78,6 +79,10 @@ function App() {
      */
     if (window.location.pathname === '/callback') {
         return <Callback />;
+    }
+
+    if (window.location.pathname === '/payment-return') {
+        return <PaymentReturn />;
     }
 
     /**
