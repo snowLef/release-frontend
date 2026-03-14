@@ -7,6 +7,7 @@ export default function PlatformSettings({
                                              platformKey,
                                              platformData,
                                              showAvailableCheckbox = true,
+                                             showDate = true,
                                              showTime = false,
                                              showUpcoming = false,
                                              showFullVersion = false
@@ -35,36 +36,38 @@ export default function PlatformSettings({
                 )}
 
                 {/* Дата и время */}
-                <div className="form-row">
-                    <div className="input-group">
-                        <label htmlFor={`${platformKey}-date`} className="form-label">
-                            Дата старта
-                        </label>
-                        <input
-                            id={`${platformKey}-date`}
-                            type="date"
-                            value={platformData.startDate || ''}
-                            onChange={(e) => handlePlatformChange(platformKey, 'startDate', e.target.value)}
-                            className="input-field"
-                        />
-                    </div>
-
-                    {/* Час старта - условный рендер */}
-                    {showTime && (
+                {showDate && (
+                    <div className="form-row">
                         <div className="input-group">
-                            <label htmlFor={`${platformKey}-time`} className="form-label">
-                                Час старта
+                            <label htmlFor={`${platformKey}-date`} className="form-label">
+                                Дата старта
                             </label>
                             <input
-                                id={`${platformKey}-time`}
-                                type="time"
-                                value={platformData.startTime || '00:00'}
-                                onChange={(e) => handlePlatformChange(platformKey, 'startTime', e.target.value)}
+                                id={`${platformKey}-date`}
+                                type="date"
+                                value={platformData.startDate || ''}
+                                onChange={(e) => handlePlatformChange(platformKey, 'startDate', e.target.value)}
                                 className="input-field"
                             />
                         </div>
-                    )}
-                </div>
+
+                        {/* Час старта - условный рендер */}
+                        {showTime && (
+                            <div className="input-group">
+                                <label htmlFor={`${platformKey}-time`} className="form-label">
+                                    Час старта
+                                </label>
+                                <input
+                                    id={`${platformKey}-time`}
+                                    type="time"
+                                    value={platformData.startTime || '00:00'}
+                                    onChange={(e) => handlePlatformChange(platformKey, 'startTime', e.target.value)}
+                                    className="input-field"
+                                />
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 {/* Скоро новый релиз (Яндекс) */}
                 {showUpcoming && (

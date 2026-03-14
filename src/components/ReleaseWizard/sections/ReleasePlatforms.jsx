@@ -90,9 +90,6 @@ export default function ReleasePlatforms() {
                     </div>
                 </div>
 
-                <button type="button" className="btn-template">
-                    Сохранить как шаблон
-                </button>
             </div>
         </div>
     );

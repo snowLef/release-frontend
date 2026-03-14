@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export function useWizardTabs(initialTab = 'release') {
-    const tabs = ['release', 'tracklist', 'platforms', 'review'];
+    const tabs = ['release', 'review'];
     const [activeTab, setActiveTab] = useState(initialTab);
     const currentTabIndex = tabs.indexOf(activeTab);
 

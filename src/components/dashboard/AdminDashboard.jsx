@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLogto } from '@logto/react';
 import toast from 'react-hot-toast';
-import { fetchAllReleases, updateReleaseStatus, API_BASE_URL } from '../../services/api.js';
+import { fetchAllReleases, updateReleaseStatus, API_BASE_URL, LOGTO_RESOURCE } from '../../services/api.js';
 import Header from '../common/Header.jsx';
 
 export default function AdminDashboard({ user, scopes, onLogout }) {
@@ -23,7 +23,7 @@ export default function AdminDashboard({ user, scopes, onLogout }) {
     const loadReleases = async () => {
         try {
             setLoading(true);
-            const token = await getAccessToken(API_BASE_URL);
+            const token = await getAccessToken(LOGTO_RESOURCE);
             const data = await fetchAllReleases(token, page, PAGE_SIZE);
             setReleases(data.content);
             setTotalPages(data.totalPages);
@@ -52,7 +52,7 @@ export default function AdminDashboard({ user, scopes, onLogout }) {
 
         try {
             setActionLoading(releaseId);
-            const token = await getAccessToken(API_BASE_URL);
+            const token = await getAccessToken(LOGTO_RESOURCE);
             await updateReleaseStatus(token, releaseId, newStatus);
 
             setReleases(releases.map(r =>

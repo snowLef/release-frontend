@@ -9,7 +9,7 @@ export default function ReleaseCover() {
             <div className="card-header">
                 <h2 className="card-title">Обложка релиза</h2>
                 <p className="card-description">
-                    Загрузите обложку для вашего релиза (JPG или PNG, до 20 МБ)
+                    Загрузите обложку для вашего релиза (JPG или PNG, до 20 МБ). Размер: 3000×3000 пикселей, разрешение: не менее 72 dpi
                 </p>
             </div>
 

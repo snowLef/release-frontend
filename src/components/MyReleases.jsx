@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLogto } from '@logto/react';
 import toast from 'react-hot-toast';
-import { fetchReleases, cancelRelease, createPayment, API_BASE_URL } from '../services/api.js';
+import { fetchReleases, cancelRelease, createPayment, API_BASE_URL, LOGTO_RESOURCE } from '../services/api.js';
 
 export default function MyReleases() {
     const { getAccessToken } = useLogto();
@@ -23,7 +23,7 @@ export default function MyReleases() {
             try {
                 setLoading(true);
                 setError(null);
-                const token = await getAccessToken(API_BASE_URL);
+                const token = await getAccessToken(LOGTO_RESOURCE);
                 const data = await fetchReleases(token, page, PAGE_SIZE);
                 if (isMounted) {
                     setReleases(Array.isArray(data) ? data : (data.content ?? []));
@@ -49,7 +49,7 @@ export default function MyReleases() {
     const handlePay = async (release) => {
         try {
             setActionLoading(release.id);
-            const token = await getAccessToken(API_BASE_URL);
+            const token = await getAccessToken(LOGTO_RESOURCE);
             const { confirmation_url } = await createPayment(
                 token,
                 release.id,
@@ -67,7 +67,7 @@ export default function MyReleases() {
 
         try {
             setActionLoading(releaseId);
-            const token = await getAccessToken(API_BASE_URL);
+            const token = await getAccessToken(LOGTO_RESOURCE);
             await cancelRelease(token, releaseId);
 
             setReleases(releases.filter(r => r.id !== releaseId));

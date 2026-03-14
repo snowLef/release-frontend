@@ -1,7 +1,7 @@
 import { useLogto } from '@logto/react';
 import { useState, useEffect, useRef } from 'react';
 
-import { API_BASE_URL } from './services/api.js';
+import { API_BASE_URL, LOGTO_RESOURCE } from './services/api.js';
 import Callback from './components/auth/Callback.jsx';
 import UserDashboard from './components/dashboard/UserDashboard.jsx';
 import AdminDashboard from './components/dashboard/AdminDashboard.jsx';
@@ -37,7 +37,7 @@ function App() {
                 const idClaims = await getIdTokenClaims();
 
                 // Получаем Access Token (там есть scopes)
-                const accessToken = await getAccessToken(API_BASE_URL);
+                const accessToken = await getAccessToken(LOGTO_RESOURCE);
 
                 // Декодируем Access Token чтобы получить scopes
                 const tokenParts = accessToken.split('.');

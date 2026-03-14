@@ -11,47 +11,37 @@ export default function PlatformsTab() {
         <>
             <AdditionalPlatformSettings />
 
-            {platformsData.appleMusic.enabled && (
-                <PlatformSettings
-                    title="Apple Music"
-                    platformKey="appleMusic"
-                    platformData={platformsData.appleMusic}
-                    showAvailableCheckbox={true}
-                    showTime={false}
-                />
-            )}
+            {/*{platformsData.vkMusic.enabled && (*/}
+            {/*    <PlatformSettings*/}
+            {/*        title="VK Музыка, Одноклассники"*/}
+            {/*        description="Определите параметры доставки на площадки VK"*/}
+            {/*        platformKey="vkMusic"*/}
+            {/*        platformData={platformsData.vkMusic}*/}
+            {/*        showAvailableCheckbox={false}*/}
+            {/*        showTime={true}*/}
+            {/*    />*/}
+            {/*)}*/}
 
-            {platformsData.vkMusic.enabled && (
-                <PlatformSettings
-                    title="VK Музыка, Одноклассники"
-                    description="Определите параметры доставки на площадки VK"
-                    platformKey="vkMusic"
-                    platformData={platformsData.vkMusic}
-                    showAvailableCheckbox={false}
-                    showTime={true}
-                />
-            )}
+            {/*{platformsData.yandexMusic.enabled && (*/}
+            {/*    <PlatformSettings*/}
+            {/*        title="Яндекс Музыка"*/}
+            {/*        platformKey="yandexMusic"*/}
+            {/*        platformData={platformsData.yandexMusic}*/}
+            {/*        showAvailableCheckbox={false}*/}
+            {/*        showTime={true}*/}
+            {/*        showUpcoming*/}
+            {/*    />*/}
+            {/*)}*/}
 
-            {platformsData.yandexMusic.enabled && (
-                <PlatformSettings
-                    title="Яндекс Музыка"
-                    platformKey="yandexMusic"
-                    platformData={platformsData.yandexMusic}
-                    showAvailableCheckbox={false}
-                    showTime={true}
-                    showUpcoming
-                />
-            )}
-
-            {platformsData.spotify.enabled && (
-                <PlatformSettings
-                    title="Spotify"
-                    platformKey="spotify"
-                    platformData={platformsData.spotify}
-                    showAvailableCheckbox={false}
-                    showTime={true}
-                />
-            )}
+            {/*{platformsData.spotify.enabled && (*/}
+            {/*    <PlatformSettings*/}
+            {/*        title="Spotify"*/}
+            {/*        platformKey="spotify"*/}
+            {/*        platformData={platformsData.spotify}*/}
+            {/*        showAvailableCheckbox={false}*/}
+            {/*        showTime={true}*/}
+            {/*    />*/}
+            {/*)}*/}
 
             {platformsData.tiktok.enabled && (
                 <PlatformSettings
@@ -70,6 +60,7 @@ export default function PlatformsTab() {
                     platformKey="youtubeMusic"
                     platformData={platformsData.youtubeMusic}
                     showAvailableCheckbox={true}
+                    showDate={false}
                     showTime={false}
                 />
             )}

@@ -14,10 +14,10 @@ export default function BasicInfoSection() {
             </div>
 
             <div className="card-body">
-                {/* Язык метаданных */}
+                {/* Язык релиза */}
                 <div className="input-group">
                     <label htmlFor="language" className="form-label">
-                        Язык метаданных
+                        Язык релиза
                         <span className="info-icon" title="Язык, на котором указаны название и подзаголовок">ⓘ</span>
                     </label>
                     <select

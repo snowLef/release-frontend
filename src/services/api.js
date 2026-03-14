@@ -1,5 +1,6 @@
 // src/api.js
 export const API_BASE_URL = import.meta.env.VITE_API_URL;
+export const LOGTO_RESOURCE = import.meta.env.VITE_LOGTO_RESOURCE ?? import.meta.env.VITE_API_URL;
 const API_URL = `${API_BASE_URL}/api/releases`;
 
 /**
@@ -41,7 +42,7 @@ export const createRelease = async (token, releaseData, file) => {
 export const fetchReleases = async (token, page = 0, size = 20) => {
     console.log('🌐 fetchReleases вызван с токеном:', token ? 'Есть' : 'Нет');
 
-    const response = await fetch(`${API_URL}?page=${page}&size=${size}`, {
+    const response = await fetch(`${API_URL}?page=${page}&size=${size}&sort=createdAt,desc`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -64,7 +65,7 @@ export const fetchReleases = async (token, page = 0, size = 20) => {
 
 // ✅ Получить все релизы (для админа) - используем общий эндпоинт
 export async function fetchAllReleases(token, page = 0, size = 20) {
-    const response = await fetch(`${API_URL}?page=${page}&size=${size}`, {
+    const response = await fetch(`${API_URL}?page=${page}&size=${size}&sort=createdAt,desc`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,

@@ -5,8 +5,12 @@ export default function WizardNavigation({
                                              tabsLength,
                                              prevTab,
                                              nextTab,
-                                             loading
+                                             loading,
+                                             termsAccepted
                                          }) {
+    const isLastTab = currentTabIndex >= tabsLength - 1;
+    const submitDisabled = loading || !termsAccepted;
+
     return (
         <div className="form-navigation">
             {currentTabIndex > 0 && (
@@ -19,7 +23,7 @@ export default function WizardNavigation({
                 </button>
             )}
 
-            {currentTabIndex < tabsLength - 1 ? (
+            {!isLastTab ? (
                 <button
                     type="button"
                     onClick={nextTab}
@@ -32,7 +36,8 @@ export default function WizardNavigation({
                 <button
                     type="submit"
                     className="btn-primary btn-submit"
-                    disabled={loading}
+                    disabled={submitDisabled}
+                    title={!termsAccepted ? 'Примите пользовательское соглашение перед отправкой' : undefined}
                     style={{ marginLeft: 'auto' }}
                 >
                     {loading ? (

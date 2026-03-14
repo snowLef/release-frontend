@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLogto } from '@logto/react';
-import { syncPayment, API_BASE_URL } from '../services/api.js';
+import { syncPayment, API_BASE_URL, LOGTO_RESOURCE } from '../services/api.js';
 
 export default function PaymentReturn() {
     const releaseId = new URLSearchParams(window.location.search).get('releaseId');
@@ -18,7 +18,7 @@ export default function PaymentReturn() {
 
         const run = async () => {
             try {
-                const token = await getAccessToken(API_BASE_URL);
+                const token = await getAccessToken(LOGTO_RESOURCE);
                 const data = await syncPayment(token, releaseId);
                 setState(data.status === 'SUCCEEDED' ? 'succeeded' : 'pending');
             } catch {

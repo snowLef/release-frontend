@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from 'react';
 import { useLogto } from '@logto/react';
 import toast from 'react-hot-toast';
-import { createRelease, API_BASE_URL } from '../services/api.js';
+import { createRelease, API_BASE_URL, LOGTO_RESOURCE } from '../services/api.js';
 import { useWizardTabs } from '../hooks/useWizardTabs';
 import { useCoverUpload, useVideoUpload, useBookletUpload, useTrackFiles } from '../hooks/useFileUpload';
 import { usePersons } from '../hooks/usePersons';
@@ -34,6 +34,8 @@ export function WizardProvider({ children, onSuccess }) {
     const { getAccessToken } = useLogto();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const [termsAccepted, setTermsAccepted] = useState(false);
+    const [showTermsModal, setShowTermsModal] = useState(false);
     const { platformsData, handlePlatformChange } = usePlatforms();
     const { tabs, activeTab, currentTabIndex, setActiveTab, nextTab, prevTab } = useWizardTabs();
     const { coverImage, coverPreview, handleCoverChange, setCoverImage, setCoverPreview } = useCoverUpload();
@@ -68,6 +70,10 @@ export function WizardProvider({ children, onSuccess }) {
             toast.error('Пожалуйста, загрузите обложку релиза');
             return false;
         }
+        if (!termsAccepted) {
+            toast.error('Необходимо принять пользовательское соглашение');
+            return false;
+        }
         return true;
     };
 
@@ -79,6 +85,8 @@ export function WizardProvider({ children, onSuccess }) {
         setVideoFile(null);
         setBookletFile(null);
         setPersons([{ id: 1, name: '', role: 'Исполнитель' }]);
+        setTermsAccepted(false);
+        setShowTermsModal(false);
     };
 
     const handleSubmit = async (e) => {
@@ -86,7 +94,7 @@ export function WizardProvider({ children, onSuccess }) {
         if (!validateForm() || loading) return;
         try {
             setLoading(true);
-            const token = await getAccessToken(API_BASE_URL);
+            const token = await getAccessToken(LOGTO_RESOURCE);
             const completeFormData = {
                 ...formData,
                 artist: persons[0]?.name || '',
@@ -117,6 +125,8 @@ export function WizardProvider({ children, onSuccess }) {
             trackFiles, noAudioFiles, handleFileChange, removeTrack, setNoAudioFiles, setTrackFiles,
             persons, handlePersonChange, addPerson, removePerson,
             handleSubmit,
+            termsAccepted, setTermsAccepted,
+            showTermsModal, setShowTermsModal,
         }}>
             {children}
         </WizardContext.Provider>

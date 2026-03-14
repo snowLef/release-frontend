@@ -7,11 +7,12 @@ import App from './App.jsx';
 import './styles/App.css';
 import './styles/index.css';
 import './styles/components/platforms.css';
+import './styles/components/terms-modal.css';
 
 const config = {
     endpoint: import.meta.env.VITE_LOGTO_ENDPOINT,
     appId: import.meta.env.VITE_LOGTO_APP_ID,
-    resources: [import.meta.env.VITE_API_URL],
+    resources: [import.meta.env.VITE_LOGTO_RESOURCE ?? import.meta.env.VITE_API_URL],
     scopes: ['read:releases', 'api:admin'],
 };
 

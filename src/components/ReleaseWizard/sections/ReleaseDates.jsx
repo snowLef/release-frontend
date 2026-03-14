@@ -14,7 +14,6 @@ export default function ReleaseDates() {
             </div>
 
             <div className="card-body">
-                {/* Дата релиза и Дата старта */}
                 <div className="form-row">
                     <div className="input-group">
                         <label htmlFor="releaseDate" className="form-label">
@@ -33,24 +32,6 @@ export default function ReleaseDates() {
                     </div>
 
                     <div className="input-group">
-                        <label htmlFor="startDate" className="form-label">
-                            Дата старта
-                            <span className="info-icon" title="Дата начала продаж">ⓘ</span>
-                        </label>
-                        <input
-                            id="startDate"
-                            type="date"
-                            name="startDate"
-                            value={formData.startDate || ''}
-                            onChange={handleChange}
-                            className="input-field"
-                        />
-                    </div>
-                </div>
-
-                {/* Дата предзаказа и Год получения прав */}
-                <div className="form-row">
-                    <div className="input-group">
                         <label htmlFor="preorderDate" className="form-label">
                             Дата предзаказа
                             <span className="info-icon" title="Дата начала предзаказа">ⓘ</span>
@@ -62,24 +43,6 @@ export default function ReleaseDates() {
                             value={formData.preorderDate || ''}
                             onChange={handleChange}
                             className="input-field"
-                        />
-                    </div>
-
-                    <div className="input-group">
-                        <label htmlFor="copyrightYear" className="form-label">
-                            Год получения прав
-                            <span className="info-icon" title="Год авторских прав">ⓘ</span>
-                        </label>
-                        <input
-                            id="copyrightYear"
-                            type="number"
-                            name="copyrightYear"
-                            value={formData.copyrightYear || new Date().getFullYear()}
-                            onChange={handleChange}
-                            className="input-field"
-                            placeholder="2026"
-                            min="1900"
-                            max={new Date().getFullYear()}
                         />
                     </div>
                 </div>

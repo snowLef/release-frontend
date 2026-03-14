@@ -1,18 +1,14 @@
 import React from 'react';
 import { WizardProvider, useWizard } from '../../contexts/WizardContext';
 import ReleaseTab from './tabs/ReleaseTab';
-import TracklistTab from './tabs/TracklistTab';
-import PlatformsTab from './tabs/PlatformsTab';
 import ReviewTab from './tabs/ReviewTab';
 import WizardNavigation from './WizardNavigation.jsx';
 
 function WizardContent() {
-    const { tabs, activeTab, setActiveTab, currentTabIndex, nextTab, prevTab, loading, handleSubmit } = useWizard();
+    const { tabs, activeTab, setActiveTab, currentTabIndex, nextTab, prevTab, loading, handleSubmit, termsAccepted } = useWizard();
 
     const tabLabels = {
         release: 'Релиз',
-        tracklist: 'Трек-лист',
-        platforms: 'Площадки',
         review: 'Проверка',
     };
 
@@ -41,8 +37,6 @@ function WizardContent() {
                     </div>
                     <form onSubmit={handleSubmit} className="release-form-long">
                         {activeTab === 'release' && <ReleaseTab />}
-                        {activeTab === 'tracklist' && <TracklistTab />}
-                        {activeTab === 'platforms' && <PlatformsTab />}
                         {activeTab === 'review' && <ReviewTab />}
 
                         <WizardNavigation
@@ -51,6 +45,7 @@ function WizardContent() {
                             prevTab={prevTab}
                             nextTab={nextTab}
                             loading={loading}
+                            termsAccepted={termsAccepted}
                         />
 
                         {activeTab === 'review' && (
