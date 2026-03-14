@@ -1,0 +1,206 @@
+/* Terms Modal */
+
+.terms-modal__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+}
+
+.terms-modal__card {
+    background: var(--bg-card);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+}
+
+.terms-modal__header {
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.terms-modal__title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.terms-modal__scroll-body {
+    max-height: 400px;
+    overflow-y: scroll;
+    padding: 1.5rem;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+}
+
+.terms-modal__scroll-body h4 {
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    margin: 1.25rem 0 0.5rem;
+}
+
+.terms-modal__scroll-body h4:first-child {
+    margin-top: 0;
+}
+
+.terms-modal__scroll-body p {
+    margin: 0 0 0.75rem;
+}
+
+.terms-modal__scroll-hint {
+    padding: 0.5rem 1.5rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+}
+
+.terms-modal__scroll-hint--hidden {
+    display: none;
+}
+
+.terms-modal__footer {
+    padding: 1rem 1.5rem 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.terms-modal__checkbox-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.terms-modal__checkbox-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    cursor: pointer;
+    flex-shrink: 0;
+    accent-color: var(--primary-blue);
+}
+
+.terms-modal__checkbox-row input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+.terms-modal__checkbox-label {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+    cursor: pointer;
+    user-select: none;
+}
+
+.terms-modal__checkbox-label--disabled {
+    color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+.terms-modal__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.terms-modal__btn-cancel {
+    padding: 0.6rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.terms-modal__btn-cancel:hover {
+    background: var(--bg-hover);
+    border-color: var(--text-muted);
+}
+
+.terms-modal__btn-accept {
+    padding: 0.6rem 1.25rem;
+    border: none;
+    border-radius: var(--border-radius);
+    background: var(--primary-blue);
+    color: var(--cream);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+}
+
+.terms-modal__btn-accept:hover:not(:disabled) {
+    background: var(--dark-blue);
+}
+
+.terms-modal__btn-accept:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Agreement status in ReviewTab */
+
+.terms-agreement-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+}
+
+.terms-agreement__btn-open {
+    padding: 0.7rem 1.5rem;
+    border: 2px solid var(--primary-blue);
+    border-radius: var(--border-radius);
+    background: var(--bg-card);
+    color: var(--primary-blue);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.terms-agreement__btn-open:hover {
+    background: var(--primary-blue);
+    color: var(--cream);
+}
+
+.terms-agreement__accepted {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--success);
+}
+
+@media (max-width: 600px) {
+    .terms-modal__card {
+        max-height: 95vh;
+    }
+
+    .terms-modal__scroll-body {
+        max-height: 300px;
+    }
+
+    .terms-modal__actions {
+        flex-direction: column;
+    }
+}
