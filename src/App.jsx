@@ -89,11 +89,7 @@ function App() {
      * Инициализация SDK
      */
     if (isLoading) {
-        return (
-            <div className="container">
-                <h2>Загрузка…</h2>
-            </div>
-        );
+        return null;
     }
 
     /**
@@ -108,11 +104,7 @@ function App() {
      * Ждём, пока загрузятся данные
      */
     if (!user) {
-        return (
-            <div className="container">
-                <h2>Загрузка данных пользователя…</h2>
-            </div>
-        );
+        return null;
     }
 
     /**

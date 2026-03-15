@@ -7,10 +7,6 @@ const Callback = () => {
         window.location.href = '/';
     });
 
-    if (isLoading) {
-        return <div className="container"><h1>Завершение входа...</h1></div>;
-    }
-
     return null;
 };
 
