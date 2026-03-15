@@ -97,23 +97,11 @@ function App() {
     }
 
     /**
-     * Не авторизован
+     * Не авторизован — сразу редиректим на страницу входа
      */
     if (!isAuthenticated) {
-        return (
-            <div
-                className="container"
-                style={{ textAlign: 'center', marginTop: '100px' }}
-            >
-                <h1>Bomjegrom Production</h1>
-                <button
-                    className="btn-primary"
-                    onClick={() => signIn(`${import.meta.env.VITE_APP_URL}/callback`)}
-                >
-                    Войти через Logto
-                </button>
-            </div>
-        );
+        signIn(`${import.meta.env.VITE_APP_URL}/callback`);
+        return null;
     }
 
     /**

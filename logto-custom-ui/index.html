@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Вход — bomjegrom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Design tokens (same as main app) ── */
+    :root {
+      --primary-blue:   #1F4568;
+      --dark-blue:      #0D2840;
+      --terracotta:     #D14532;
+      --terracotta-hover: #B83828;
+      --cream:          #F5F1E8;
+      --gold:           #E8A547;
+      --bg-card:        #FFFFFF;
+      --bg-secondary:   #FAF7F2;
+      --text-primary:   #2D2419;
+      --text-secondary: #6B5D4F;
+      --text-muted:     #8B7D6B;
+      --border:         #D4C5B0;
+      --shadow-sm:      0 2px 8px rgba(31,69,104,.08);
+      --shadow-md:      0 4px 16px rgba(31,69,104,.12);
+      --shadow-lg:      0 8px 32px rgba(31,69,104,.16);
+      --radius:         12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--cream);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Decorative background texture ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 700px 500px at 10% 20%, rgba(31,69,104,.06) 0%, transparent 70%),
+        radial-gradient(ellipse 500px 400px at 90% 80%, rgba(209,69,50,.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Card wrapper ── */
+    .page-wrap {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 440px;
+      animation: fadeIn .45s ease both;
+    }
+
+    /* ── Logo / brand ── */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-sm);
+      flex-shrink: 0;
+    }
+
+    .brand-icon svg {
+      width: 24px;
+      height: 24px;
+      fill: #fff;
+    }
+
+    .brand-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--primary-blue);
+      letter-spacing: -.02em;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 36px 40px 40px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(212,197,176,.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative top accent line */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--terracotta) 0%, var(--gold) 100%);
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 600;
+      color: var(--primary-blue);
+      margin-bottom: 6px;
+      letter-spacing: -.01em;
+    }
+
+    .card-subtitle {
+      font-size: .875rem;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+
+    /* ── Form ── */
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 11px 14px 11px 40px;
+      background: var(--bg-secondary);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: .925rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+      -webkit-appearance: none;
+    }
+
+    .input-field::placeholder { color: var(--text-muted); }
+
+    .input-field:focus {
+      border-color: var(--terracotta);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(209,69,50,.12);
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon svg { width: 17px; height: 17px; }
+
+    /* Password toggle */
+    .pwd-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      transition: color .2s;
+      border-radius: 4px;
+    }
+    .pwd-toggle:hover { color: var(--text-secondary); }
+    .pwd-toggle svg { width: 17px; height: 17px; }
+
+    /* ── Submit button ── */
+    .btn-submit {
+      width: 100%;
+      padding: 13px;
+      margin-top: 8px;
+      background: linear-gradient(135deg, var(--terracotta) 0%, #c03d2a 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(209,69,50,.35);
+      transition: transform .18s, box-shadow .18s, opacity .18s;
+      position: relative;
+      overflow: hidden;
+      -webkit-appearance: none;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(209,69,50,.45);
+    }
+
+    .btn-submit:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(209,69,50,.3);
+    }
+
+    .btn-submit:disabled {
+      opacity: .75;
+      cursor: not-allowed;
+    }
+
+    /* Spinner inside button */
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    /* ── Error message ── */
+    .error-msg {
+      display: none;
+      align-items: flex-start;
+      gap: 8px;
+      background: rgba(209,69,50,.08);
+      border: 1px solid rgba(209,69,50,.25);
+      border-radius: 8px;
+      padding: 10px 13px;
+      margin-top: 14px;
+      font-size: .85rem;
+      color: var(--terracotta);
+      animation: fadeIn .25s ease both;
+    }
+
+    .error-msg.visible { display: flex; }
+
+    .error-msg svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── Footer note ── */
+    .footer-note {
+      text-align: center;
+      margin-top: 22px;
+      font-size: .8rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .card { padding: 28px 22px 32px; }
+      .card-title { font-size: 1.35rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- Brand -->
+  <div class="brand">
+    <div class="brand-icon">
+      <!-- Music note SVG -->
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 3v10.55A4 4 0 1 0 11 17V7h6V3H9Zm-2 16a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"/>
+      </svg>
+    </div>
+    <span class="brand-name">bomjegrom</span>
+  </div>
+
+  <!-- Login card -->
+  <div class="card">
+    <h1 class="card-title">Вход в кабинет</h1>
+    <p class="card-subtitle">Управляйте своими релизами в одном месте</p>
+
+    <form id="loginForm" autocomplete="on" novalidate>
+
+      <!-- Identifier (email or username) -->
+      <div class="form-group">
+        <label class="form-label" for="identifier">Email или имя пользователя</label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <!-- User icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </span>
+          <input
+            id="identifier"
+            type="text"
+            class="input-field"
+            placeholder="name@example.com"
+            autocomplete="username"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label class="form-label" for="password">Пароль</label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <!-- Lock icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </span>
+          <input
+            id="password"
+            type="password"
+            class="input-field"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            required
+            style="padding-right: 42px"
+          />
+          <button type="button" class="pwd-toggle" id="pwdToggle" aria-label="Показать пароль">
+            <!-- Eye icon (closed by default, will swap) -->
+            <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <span id="btnLabel">Войти</span>
+      </button>
+
+      <!-- Error -->
+      <div class="error-msg" id="errorMsg" role="alert">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span id="errorText"></span>
+      </div>
+
+    </form>
+  </div>
+
+  <p class="footer-note">© bomjegrom — дистрибуция музыки</p>
+</div>
+
+<script>
+  // ── Consent page: auto-approve and redirect ───────────────────
+  if (window.location.pathname === '/consent') {
+    document.getElementById('loginForm').style.display = 'none';
+    document.querySelector('.card-title').textContent = 'Выполняется вход…';
+    document.querySelector('.card-subtitle').textContent = '';
+
+    (async () => {
+      try {
+        const { redirectTo } = await fetch('/api/experience/consent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+        }).then(r => r.json());
+        window.location.replace(redirectTo);
+      } catch {
+        document.querySelector('.card-title').textContent = 'Ошибка входа';
+        document.querySelector('.card-subtitle').textContent = 'Попробуйте обновить страницу.';
+      }
+    })();
+  }
+
+  // ── DOM refs ──────────────────────────────────────────────────
+  const form       = document.getElementById('loginForm');
+  const submitBtn  = document.getElementById('submitBtn');
+  const btnLabel   = document.getElementById('btnLabel');
+  const errorMsg   = document.getElementById('errorMsg');
+  const errorText  = document.getElementById('errorText');
+  const pwdInput   = document.getElementById('password');
+  const pwdToggle  = document.getElementById('pwdToggle');
+  const eyeIcon    = document.getElementById('eyeIcon');
+
+  // ── Password visibility toggle ────────────────────────────────
+  const EYE_OPEN = `
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+    <circle cx="12" cy="12" r="3"/>`;
+  const EYE_CLOSED = `
+    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+    <line x1="1" y1="1" x2="23" y2="23"/>`;
+
+  pwdToggle.addEventListener('click', () => {
+    const show = pwdInput.type === 'password';
+    pwdInput.type = show ? 'text' : 'password';
+    eyeIcon.innerHTML = show ? EYE_CLOSED : EYE_OPEN;
+  });
+
+  // ── UI helpers ────────────────────────────────────────────────
+  function setLoading(on) {
+    submitBtn.disabled = on;
+    btnLabel.innerHTML = on
+      ? '<div class="spinner"></div> Вход…'
+      : 'Войти';
+  }
+
+  function showError(msg) {
+    errorText.textContent = msg;
+    errorMsg.classList.add('visible');
+  }
+
+  function hideError() {
+    errorMsg.classList.remove('visible');
+  }
+
+  // ── Error message mapping ─────────────────────────────────────
+  function friendlyError(status, body) {
+    if (status === 422) {
+      const code = body?.code ?? '';
+      if (code === 'session.invalid_credentials') return 'Неверный email или пароль.';
+      if (code.includes('password_rejected'))      return 'Неверный пароль.';
+      if (code.includes('user_not_exist'))         return 'Пользователь не найден.';
+    }
+    if (status === 401) return 'Аккаунт заблокирован. Обратитесь в поддержку.';
+    if (status === 400) {
+      const code = body?.code ?? '';
+      if (code.includes('attempts')) return 'Слишком много попыток. Подождите немного.';
+    }
+    if (status === 0 || status === undefined) return 'Нет соединения. Проверьте интернет.';
+    return 'Произошла ошибка. Попробуйте ещё раз.';
+  }
+
+  // ── Core API: all calls use relative paths (proxied by Logto) ─
+  async function api(method, path, body) {
+    const opts = {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',   // session cookie
+    };
+    if (body !== undefined) opts.body = JSON.stringify(body);
+
+    let res;
+    try {
+      res = await fetch(path, opts);
+    } catch {
+      throw { status: 0 };
+    }
+
+    let json = null;
+    try { json = await res.json(); } catch { /* empty body */ }
+
+    if (!res.ok) throw { status: res.status, body: json };
+    return json;
+  }
+
+  // ── Detect identifier type (email vs username) ────────────────
+  function identifierType(value) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()) ? 'email' : 'username';
+  }
+
+  // ── Main sign-in flow ─────────────────────────────────────────
+  async function signIn(identifier, password) {
+    const type  = identifierType(identifier);
+    const value = identifier.trim();
+
+    // 1. Initialise interaction session
+    await api('PUT', '/api/experience', { interactionEvent: 'SignIn' });
+
+    // 2. Verify password credentials → get verificationId
+    const { verificationId } = await api('POST', '/api/experience/verification/password', {
+      identifier: { type, value },
+      password,
+    });
+
+    // 3. Identify the user with the verified record
+    await api('POST', '/api/experience/identification', { verificationId });
+
+    // 4. Submit interaction → get redirect URL back to the app
+    const { redirectTo } = await api('POST', '/api/experience/submit');
+
+    // 5. Complete the OAuth flow
+    window.location.replace(redirectTo);
+  }
+
+  // ── Form submit handler ───────────────────────────────────────
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideError();
+
+    const identifier = document.getElementById('identifier').value.trim();
+    const pwd        = pwdInput.value;
+
+    if (!identifier || !pwd) {
+      showError('Заполните все поля.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await signIn(identifier, pwd);
+      // If signIn succeeds, browser navigates away — no need to stop loading
+    } catch (err) {
+      setLoading(false);
+      showError(friendlyError(err.status, err.body));
+    }
+  });
+
+  // Clear error on input
+  ['identifier', 'password'].forEach(id => {
+    document.getElementById(id).addEventListener('input', hideError);
+  });
+</script>
+
+</body>
+</html>
