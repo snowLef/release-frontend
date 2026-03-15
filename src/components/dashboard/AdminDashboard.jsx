@@ -101,7 +101,7 @@ export default function AdminDashboard({ user, scopes, onLogout }) {
         ? releases
         : releases.filter(r => r.status === filter);
 
-    if (loading) return <div className="text-center">Загрузка...</div>;
+    if (loading) return null;
 
     return (
         <div className="container">

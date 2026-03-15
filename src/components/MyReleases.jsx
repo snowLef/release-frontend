@@ -104,26 +104,12 @@ export default function MyReleases() {
     };
 
     if (loading) {
-        return (
-            <div style={{textAlign: 'center', padding: '3rem'}}>
-                <div className="spinner" style={{
-                    width: '40px',
-                    height: '40px',
-                    border: '4px solid var(--border)',
-                    borderTopColor: 'var(--terracotta)',
-                    margin: '0 auto 1rem'
-                }}></div>
-                <p>Загрузка ваших треков...</p>
-            </div>
-        );
+        return null;
     }
 
     if (error) {
         return (
             <div className="form-card" style={{textAlign: 'center', padding: '3rem'}}>
-                <p style={{color: 'var(--error)', marginBottom: '1rem'}}>
-                    ❌ Ошибка загрузки: {error}
-                </p>
                 <button onClick={() => window.location.reload()} className="btn-primary">
                     Обновить страницу
                 </button>
