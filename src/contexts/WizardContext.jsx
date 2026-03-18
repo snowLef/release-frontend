@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import { useLogto } from '@logto/react';
+import { useAuth } from '../hooks/useAuth.js';
 import toast from 'react-hot-toast';
 import { createRelease, API_BASE_URL, LOGTO_RESOURCE } from '../services/api.js';
 import { useWizardTabs } from '../hooks/useWizardTabs';
@@ -29,12 +29,13 @@ const INITIAL_FORM_DATA = {
     lyricist: '',
     composer: '',
     lyrics: '',
+    comment: '',
 };
 
 const WizardContext = createContext(null);
 
 export function WizardProvider({ children, onSuccess }) {
-    const { getAccessToken } = useLogto();
+    const { getAccessToken } = useAuth();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const [termsAccepted, setTermsAccepted] = useState(false);

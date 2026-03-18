@@ -9,6 +9,8 @@ import './styles/index.css';
 import './styles/components/platforms.css';
 import './styles/components/terms-modal.css';
 
+const DEV_BYPASS = import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === 'true';
+
 const config = {
     endpoint: import.meta.env.VITE_LOGTO_ENDPOINT,
     appId: import.meta.env.VITE_LOGTO_APP_ID,
@@ -16,26 +18,37 @@ const config = {
     scopes: ['read:releases', 'api:admin'],
 };
 
+const toaster = (
+    <Toaster
+        position="top-right"
+        toastOptions={{
+            duration: 4000,
+            style: {
+                fontFamily: 'Inter, sans-serif',
+                fontSize: '0.9rem',
+            },
+            success: {
+                style: { background: '#1F4568', color: '#F5F1E8' },
+                iconTheme: { primary: '#F5F1E8', secondary: '#1F4568' },
+            },
+            error: {
+                style: { background: '#D14532', color: '#F5F1E8' },
+                iconTheme: { primary: '#F5F1E8', secondary: '#D14532' },
+            },
+        }}
+    />
+);
+
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <LogtoProvider config={config}>
-        <App />
-        <Toaster
-            position="top-right"
-            toastOptions={{
-                duration: 4000,
-                style: {
-                    fontFamily: 'Inter, sans-serif',
-                    fontSize: '0.9rem',
-                },
-                success: {
-                    style: { background: '#1F4568', color: '#F5F1E8' },
-                    iconTheme: { primary: '#F5F1E8', secondary: '#1F4568' },
-                },
-                error: {
-                    style: { background: '#D14532', color: '#F5F1E8' },
-                    iconTheme: { primary: '#F5F1E8', secondary: '#D14532' },
-                },
-            }}
-        />
-    </LogtoProvider>
+    DEV_BYPASS ? (
+        <>
+            <App />
+            {toaster}
+        </>
+    ) : (
+        <LogtoProvider config={config}>
+            <App />
+            {toaster}
+        </LogtoProvider>
+    )
 );

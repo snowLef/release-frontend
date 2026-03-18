@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useLogto } from '@logto/react';
+import { useAuth } from '../hooks/useAuth.js';
 import toast from 'react-hot-toast';
 import { fetchReleases, cancelRelease, createPayment, API_BASE_URL, LOGTO_RESOURCE } from '../services/api.js';
 
 export default function MyReleases() {
-    const { getAccessToken } = useLogto();
+    const { getAccessToken } = useAuth();
     const [releases, setReleases] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);

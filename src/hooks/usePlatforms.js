@@ -42,9 +42,6 @@ export function usePlatforms() {
             available: false,
             previewDisabled: false,
             startDate: '',
-            releasePriceCategory: '',
-            trackPriceCategory: 'mid',
-            minPriceCategory: false,
             appleDigitalMasters: false,
         },
     });

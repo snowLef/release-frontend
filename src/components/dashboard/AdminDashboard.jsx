@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useLogto } from '@logto/react';
+import { useAuth } from '../../hooks/useAuth.js';
 import toast from 'react-hot-toast';
 import { fetchAllReleases, updateReleaseStatus, API_BASE_URL, LOGTO_RESOURCE } from '../../services/api.js';
 import Header from '../common/Header.jsx';
 
 export default function AdminDashboard({ user, scopes, onLogout }) {
-    const { getAccessToken } = useLogto();
+    const { getAccessToken } = useAuth();
     const [releases, setReleases] = useState([]);
     const [loading, setLoading] = useState(true);
     const [expandedId, setExpandedId] = useState(null);

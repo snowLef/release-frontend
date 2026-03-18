@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useLogto } from '@logto/react';
+import { useAuth } from '../hooks/useAuth.js';
 import { syncPayment, API_BASE_URL, LOGTO_RESOURCE } from '../services/api.js';
 
 export default function PaymentReturn() {
     const releaseId = new URLSearchParams(window.location.search).get('releaseId');
-    const { isAuthenticated, isLoading, getAccessToken } = useLogto();
+    const { isAuthenticated, isLoading, getAccessToken } = useAuth();
     const [state, setState] = useState('loading'); // loading | succeeded | pending | failed
     const [countdown, setCountdown] = useState(4);
 

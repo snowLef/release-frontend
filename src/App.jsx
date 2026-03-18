@@ -1,4 +1,4 @@
-import { useLogto } from '@logto/react';
+import { useAuth } from './hooks/useAuth.js';
 import { useState, useEffect, useRef } from 'react';
 
 import { API_BASE_URL, LOGTO_RESOURCE } from './services/api.js';
@@ -7,7 +7,18 @@ import UserDashboard from './components/dashboard/UserDashboard.jsx';
 import AdminDashboard from './components/dashboard/AdminDashboard.jsx';
 import PaymentReturn from './components/PaymentReturn.jsx';
 
+const DEV_BYPASS = import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === 'true';
+const DEV_IS_ADMIN = import.meta.env.VITE_DEV_USER_IS_ADMIN === 'true';
+const DEV_USER = { id: 'dev-user', email: 'dev@localhost' };
+const DEV_SCOPES = DEV_IS_ADMIN ? ['read:releases', 'api:admin'] : ['read:releases'];
+
 function App() {
+    if (DEV_BYPASS) {
+        if (DEV_IS_ADMIN) {
+            return <AdminDashboard user={DEV_USER} scopes={DEV_SCOPES} onLogout={() => {}} />;
+        }
+        return <UserDashboard user={DEV_USER} scopes={DEV_SCOPES} onLogout={() => {}} />;
+    }
     const [user, setUser] = useState(null);
     const [scopes, setScopes] = useState([]); // ✅ Теперь scopes вместо roles
     const loadedUserRef = useRef(false);
@@ -19,7 +30,7 @@ function App() {
         signOut,
         getIdTokenClaims,
         getAccessToken, // ✅ Добавляем для получения Access Token
-    } = useLogto();
+    } = useAuth();
 
     const handleLogout = () => {
         signOut(import.meta.env.VITE_APP_URL);
