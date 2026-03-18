@@ -20,19 +20,14 @@ export default function ReleaseTab() {
     return (
         <>
             <BasicInfoSection />
-            <ReleaseCover />
             <ReleasePersons />
             <ReleaseGenre />
+            <ReleaseTracks />
+            <ReleaseCover />
             <ReleaseLabel />
             <ReleaseDates />
             <ReleasePlatforms />
-            {/* <ReleaseVideo /> */}
-            {/* <ReleaseBooklet /> */}
 
-            {/* Tracklist */}
-            <ReleaseTracks />
-
-            {/* Platform settings */}
             <AdditionalPlatformSettings />
 
             {platformsData.tiktok.enabled && (
