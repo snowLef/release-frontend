@@ -26,6 +26,8 @@ const INITIAL_FORM_DATA = {
     platforms: 'all',
     territories: 'all',
     excludedCountries: [],
+    lyricist: '',
+    composer: '',
 };
 
 const WizardContext = createContext(null);
@@ -56,6 +58,14 @@ export function WizardProvider({ children, onSuccess }) {
         }
         if (!persons[0]?.name?.trim()) {
             toast.error('Пожалуйста, укажите исполнителя');
+            return false;
+        }
+        if (!formData.lyricist.trim()) {
+            toast.error('Пожалуйста, укажите автора слов');
+            return false;
+        }
+        if (!formData.composer.trim()) {
+            toast.error('Пожалуйста, укажите автора музыки');
             return false;
         }
         if (!formData.releaseDate) {

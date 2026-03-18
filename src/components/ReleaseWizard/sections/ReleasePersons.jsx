@@ -2,7 +2,7 @@ import React from 'react';
 import { useWizard } from '../../../contexts/WizardContext';
 
 export default function ReleasePersons() {
-    const { persons, handlePersonChange, addPerson, removePerson } = useWizard();
+    const { persons, handlePersonChange, addPerson, removePerson, formData, handleChange } = useWizard();
     return (
         /* СЕКЦИЯ 3: Персоны и роли */
         <div className="form-card">
@@ -64,6 +64,39 @@ export default function ReleasePersons() {
                 >
                     ➕ Добавить
                 </button>
+
+                <div className="person-row" style={{marginTop: '1.5rem'}}>
+                    <div className="person-inputs">
+                        <div className="input-group">
+                            <label className="form-label">
+                                Автор слов <span style={{color: 'var(--color-error, #D14532)'}}>*</span>
+                            </label>
+                            <input
+                                type="text"
+                                name="lyricist"
+                                value={formData.lyricist}
+                                onChange={handleChange}
+                                className="input-field"
+                                placeholder="Введите имя автора слов"
+                                required
+                            />
+                        </div>
+                        <div className="input-group">
+                            <label className="form-label">
+                                Автор музыки <span style={{color: 'var(--color-error, #D14532)'}}>*</span>
+                            </label>
+                            <input
+                                type="text"
+                                name="composer"
+                                value={formData.composer}
+                                onChange={handleChange}
+                                className="input-field"
+                                placeholder="Введите имя автора музыки"
+                                required
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
