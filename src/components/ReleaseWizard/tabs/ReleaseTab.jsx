@@ -7,6 +7,7 @@ import ReleaseLabel from '../sections/ReleaseLabel.jsx';
 import ReleaseDates from '../sections/ReleaseDates.jsx';
 import ReleasePlatforms from '../sections/ReleasePlatforms.jsx';
 import ReleaseTracks from '../sections/ReleaseTracks.jsx';
+import ReleaseLyrics from '../sections/ReleaseLyrics.jsx';
 import AdditionalPlatformSettings from '../sections/AdditionalPlatformSettings.jsx';
 import PlatformSettings from '../sections/PlatformSettings.jsx';
 import ITunesSettings from '../sections/ITunesSettings.jsx';
@@ -23,6 +24,7 @@ export default function ReleaseTab() {
             <ReleasePersons />
             <ReleaseGenre />
             <ReleaseTracks />
+            <ReleaseLyrics />
             <ReleaseCover />
             <ReleaseLabel />
             <ReleaseDates />

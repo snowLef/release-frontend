@@ -28,6 +28,7 @@ const INITIAL_FORM_DATA = {
     excludedCountries: [],
     lyricist: '',
     composer: '',
+    lyrics: '',
 };
 
 const WizardContext = createContext(null);
