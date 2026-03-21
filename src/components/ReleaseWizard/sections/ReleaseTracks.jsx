@@ -2,7 +2,8 @@ import React from 'react';
 import { useWizard } from '../../../contexts/WizardContext';
 
 export default function ReleaseTracks() {
-    const { trackFiles, removeTrack, noAudioFiles, handleFileChange, setNoAudioFiles, setTrackFiles } = useWizard();
+    const { trackFiles, removeTrack, noAudioFiles, handleFileChange, setNoAudioFiles, setTrackFiles, maxTracks } = useWizard();
+    const isAtLimit = trackFiles.length >= maxTracks;
 
     return (
         /* СЕКЦИЯ: Загрузка треков */
@@ -23,6 +24,10 @@ export default function ReleaseTracks() {
                     <div className="info-row">
                         <span className="info-label">Макс. размер файла:</span>
                         <span className="info-value">1 ГБ</span>
+                    </div>
+                    <div className="info-row">
+                        <span className="info-label">Треки:</span>
+                        <span className="info-value">{trackFiles.length} / {maxTracks}</span>
                     </div>
                 </div>
 
@@ -52,28 +57,35 @@ export default function ReleaseTracks() {
                     </div>
                 )}
 
-                <label className={`tracks-upload-area ${noAudioFiles ? 'disabled' : ''}`}>
-                    <input
-                        type="file"
-                        accept=".wav,.flac,audio/wav,audio/flac"
-                        onChange={handleFileChange}
-                        multiple
-                        hidden
-                        disabled={noAudioFiles}
-                    />
-                    <div className="upload-icon-container">
-                        <div className="icon-tracks">📁</div>
+                {!isAtLimit && (
+                    <label className={`tracks-upload-area ${noAudioFiles ? 'disabled' : ''}`}>
+                        <input
+                            type="file"
+                            accept=".wav,.flac,audio/wav,audio/flac"
+                            onChange={handleFileChange}
+                            multiple={maxTracks > 1}
+                            hidden
+                            disabled={noAudioFiles}
+                        />
+                        <div className="upload-icon-container">
+                            <div className="icon-tracks">📁</div>
+                        </div>
+                        <span className="upload-title">
+                            {trackFiles.length > 0
+                                ? "Добавить еще треки"
+                                : "Перенесите файлы сюда или нажмите, чтобы загрузить"
+                            }
+                        </span>
+                        <span className="upload-subtitle">
+                            Формат: .wav, .flac • Максимальный размер: 1 ГБ
+                        </span>
+                    </label>
+                )}
+                {isAtLimit && !noAudioFiles && (
+                    <div className="tracks-upload-area disabled">
+                        <span className="upload-title">Достигнут максимум треков ({maxTracks})</span>
                     </div>
-                    <span className="upload-title">
-                        {trackFiles.length > 0
-                            ? "Добавить еще треки"
-                            : "Перенесите файлы сюда или нажмите, чтобы загрузить"
-                        }
-                    </span>
-                    <span className="upload-subtitle">
-                        Формат: .wav, .flac • Максимальный размер: 1 ГБ
-                    </span>
-                </label>
+                )}
 
                 <div className="no-audio-checkbox">
                     <label className="checkbox-label">

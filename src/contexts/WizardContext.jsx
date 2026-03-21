@@ -3,8 +3,8 @@ import { useAuth } from '../hooks/useAuth.js';
 import toast from 'react-hot-toast';
 import { createRelease, API_BASE_URL, LOGTO_RESOURCE } from '../services/api.js';
 import { useWizardTabs } from '../hooks/useWizardTabs';
-import { useCoverUpload, useVideoUpload, useBookletUpload, useTrackFiles } from '../hooks/useFileUpload';
-import { usePersons } from '../hooks/usePersons';
+import { useCoverUpload, useVideoUpload, useBookletUpload } from '../hooks/useFileUpload';
+import { useTrackManager } from '../hooks/useTrackManager';
 import { usePlatforms } from '../hooks/usePlatforms.js';
 
 const INITIAL_FORM_DATA = {
@@ -26,9 +26,6 @@ const INITIAL_FORM_DATA = {
     platforms: 'all',
     territories: 'all',
     excludedCountries: [],
-    lyricist: '',
-    composer: '',
-    lyrics: '',
     comment: '',
 };
 
@@ -45,8 +42,18 @@ export function WizardProvider({ children, onSuccess }) {
     const { coverImage, coverPreview, handleCoverChange, setCoverImage, setCoverPreview } = useCoverUpload();
     const { videoFile, handleVideoChange, setVideoFile } = useVideoUpload();
     const { bookletFile, handleBookletChange, setBookletFile } = useBookletUpload();
-    const { trackFiles, noAudioFiles, handleFileChange, removeTrack, setNoAudioFiles, setTrackFiles } = useTrackFiles();
-    const { persons, handlePersonChange, addPerson, removePerson, setPersons } = usePersons();
+
+    const TRACK_LIMITS = { Single: 1, EP: 5, Album: 50 };
+    const maxTracks = TRACK_LIMITS[formData.releaseType] ?? 1;
+
+    const {
+        tracks, addTrack, removeTrack,
+        updateTrackField, updateTrackFile, toggleTrack,
+        addPerson, removePerson, updatePerson,
+        addLyricist, removeLyricist, updateLyricist,
+        addComposer, removeComposer, updateComposer,
+        resetTracks,
+    } = useTrackManager(maxTracks);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -58,24 +65,16 @@ export function WizardProvider({ children, onSuccess }) {
             toast.error('Пожалуйста, укажите название релиза');
             return false;
         }
-        if (!persons[0]?.name?.trim()) {
-            toast.error('Пожалуйста, укажите исполнителя');
-            return false;
-        }
-        if (!formData.lyricist.trim()) {
-            toast.error('Пожалуйста, укажите автора слов');
-            return false;
-        }
-        if (!formData.composer.trim()) {
-            toast.error('Пожалуйста, укажите автора музыки');
-            return false;
-        }
         if (!formData.releaseDate) {
             toast.error('Пожалуйста, выберите дату релиза');
             return false;
         }
-        if (!noAudioFiles && trackFiles.length === 0) {
-            toast.error('Пожалуйста, загрузите аудио файлы или отметьте "Релиз без аудиофайлов"');
+        if (tracks.some(t => !t.file)) {
+            toast.error('Пожалуйста, загрузите аудиофайл для каждого трека');
+            return false;
+        }
+        if (tracks.some(t => !t.title.trim())) {
+            toast.error('Пожалуйста, укажите название для каждого трека');
             return false;
         }
         if (!coverImage) {
@@ -91,12 +90,11 @@ export function WizardProvider({ children, onSuccess }) {
 
     const resetForm = () => {
         setFormData(INITIAL_FORM_DATA);
-        setTrackFiles([]);
+        resetTracks();
         setCoverImage(null);
         setCoverPreview(null);
         setVideoFile(null);
         setBookletFile(null);
-        setPersons([{ id: 1, name: '', role: 'Исполнитель' }]);
         setTermsAccepted(false);
         setShowTermsModal(false);
     };
@@ -109,11 +107,10 @@ export function WizardProvider({ children, onSuccess }) {
             const token = await getAccessToken(LOGTO_RESOURCE);
             const completeFormData = {
                 ...formData,
-                artist: persons[0]?.name || '',
-                persons,
+                artist: tracks[0]?.persons[0]?.name || '',
                 platformsData,
             };
-            await createRelease(token, completeFormData, trackFiles, coverImage, videoFile, bookletFile);
+            await createRelease(token, completeFormData, tracks, coverImage, videoFile, bookletFile);
             resetForm();
             toast.success('Релиз успешно отправлен на модерацию!');
             if (onSuccess) onSuccess();
@@ -134,8 +131,11 @@ export function WizardProvider({ children, onSuccess }) {
             coverPreview, handleCoverChange,
             videoFile, handleVideoChange,
             bookletFile, handleBookletChange,
-            trackFiles, noAudioFiles, handleFileChange, removeTrack, setNoAudioFiles, setTrackFiles,
-            persons, handlePersonChange, addPerson, removePerson,
+            tracks, maxTracks, addTrack, removeTrack,
+            updateTrackField, updateTrackFile, toggleTrack,
+            addPerson, removePerson, updatePerson,
+            addLyricist, removeLyricist, updateLyricist,
+            addComposer, removeComposer, updateComposer,
             handleSubmit,
             termsAccepted, setTermsAccepted,
             showTermsModal, setShowTermsModal,

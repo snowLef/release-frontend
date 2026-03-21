@@ -128,7 +128,7 @@ export function useBookletUpload() {
     return { bookletFile, handleBookletChange, setBookletFile };
 }
 
-export function useTrackFiles() {
+export function useTrackFiles(maxTracks = 50) {
     const [trackFiles, setTrackFiles] = useState([]);
     const [noAudioFiles, setNoAudioFiles] = useState(false);
     const { validateFile } = useFileUpload();
@@ -136,8 +136,10 @@ export function useTrackFiles() {
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files.length > 0) {
             const newFiles = Array.from(e.target.files);
-            const validFiles = [];
+            // Сбрасываем значение инпута — позволяет повторно выбрать тот же файл
+            e.target.value = null;
 
+            const validFiles = [];
             for (const file of newFiles) {
                 try {
                     validateFile(file, {
@@ -151,7 +153,16 @@ export function useTrackFiles() {
             }
 
             if (validFiles.length > 0) {
-                setTrackFiles(prev => [...prev, ...validFiles]);
+                const remaining = maxTracks - trackFiles.length;
+                if (remaining <= 0) {
+                    toast.error(`Достигнут лимит треков (${maxTracks})`);
+                    return;
+                }
+                const toAdd = validFiles.slice(0, remaining);
+                if (toAdd.length < validFiles.length) {
+                    toast.error(`Достигнут лимит треков (${maxTracks}). Добавлено ${toAdd.length} из ${validFiles.length}`);
+                }
+                setTrackFiles(prev => [...prev, ...toAdd]);
             }
         }
     };

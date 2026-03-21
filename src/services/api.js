@@ -7,22 +7,47 @@ const API_URL = `${API_BASE_URL}/api/releases`;
  * Отправка нового релиза
  * @param {string} token - JWT токен, полученный от Logto
  * @param {object} releaseData - данные из формы
- * @param {File} file - WAV файл
+ * @param {Array} tracks - массив объектов треков (с file, title, persons и т.д.)
+ * @param {File} coverImage - обложка
+ * @param {File} videoFile - видео (опционально)
+ * @param {File} bookletFile - буклет (опционально)
  */
-export const createRelease = async (token, releaseData, file) => {
+export const createRelease = async (token, releaseData, tracks, coverImage, videoFile, bookletFile) => {
     const formData = new FormData();
 
+    const tracksMetadata = tracks.map((t, i) => ({
+        position: i + 1,
+        title: t.title,
+        version: t.version,
+        persons: t.persons,
+        lyricists: t.lyricists,
+        composers: t.composers,
+        lyrics: t.lyrics,
+        copyrightShare: t.copyrightShare,
+        relatedRightsShare: t.relatedRightsShare,
+        ringtone: t.ringtone,
+    }));
+
     const jsonPart = JSON.stringify({
+        releaseType: releaseData.releaseType,
         artist: releaseData.artist,
         title: releaseData.releaseTitle,
         genre: releaseData.genre,
         releaseDate: releaseData.releaseDate,
         upc: releaseData.upc,
-        explicit: releaseData.explicit === 'yes'
+        explicit: releaseData.explicit === 'yes',
+        tracksMetadata,
     });
 
     formData.append("data", new Blob([jsonPart], { type: "application/json" }));
-    if (file) formData.append("file", file);
+
+    tracks.forEach(t => {
+        if (t.file) formData.append("files", t.file);
+    });
+
+    if (coverImage) formData.append("cover", coverImage);
+    if (videoFile) formData.append("video", videoFile);
+    if (bookletFile) formData.append("booklet", bookletFile);
 
     const response = await fetch(API_URL, {
         method: 'POST',

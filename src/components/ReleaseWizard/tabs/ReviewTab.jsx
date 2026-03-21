@@ -47,9 +47,7 @@ function ReviewRow({ label, value }) {
 export default function ReviewTab() {
     const {
         formData,
-        persons,
-        trackFiles,
-        noAudioFiles,
+        tracks,
         coverPreview,
         platformsData,
         termsAccepted,
@@ -101,22 +99,6 @@ export default function ReviewTab() {
                     </div>
                 )}
 
-                {/* Исполнители */}
-                <div className="review-section">
-                    <h3>Исполнители</h3>
-                    {persons.length === 0 || !persons[0]?.name ? (
-                        <p>Не указаны</p>
-                    ) : (
-                        persons.map((person, i) => (
-                            person.name && (
-                                <p key={person.id || i}>
-                                    <strong>{person.role}:</strong> {person.name}
-                                </p>
-                            )
-                        ))
-                    )}
-                </div>
-
                 {/* Жанр */}
                 <div className="review-section">
                     <h3>Жанр</h3>
@@ -135,6 +117,64 @@ export default function ReviewTab() {
                                 : formData.label
                         }
                     />
+                </div>
+
+                {/* Треки */}
+                <div className="review-section">
+                    <h3>Треки ({tracks.length})</h3>
+                    {tracks.map((track, i) => (
+                        <div key={track.id} style={{
+                            marginBottom: '1rem',
+                            paddingLeft: '0.5rem',
+                            borderLeft: '3px solid var(--color-accent, #D14532)',
+                        }}>
+                            <p style={{ fontWeight: 600 }}>
+                                {i + 1}. {track.title || 'Без названия'}
+                                {track.version && <span style={{ fontWeight: 400, color: 'var(--text-secondary)' }}> ({track.version})</span>}
+                            </p>
+                            {track.file && (
+                                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                                    Файл: {track.file.name} ({(track.file.size / 1024 / 1024).toFixed(2)} МБ)
+                                </p>
+                            )}
+                            {!track.file && (
+                                <p style={{ color: 'var(--error, #D14532)', fontSize: '0.9rem' }}>
+                                    Файл не загружен
+                                </p>
+                            )}
+                            {track.persons.some(p => p.name) && (
+                                <p style={{ fontSize: '0.9rem' }}>
+                                    <strong>Исполнители:</strong>{' '}
+                                    {track.persons.filter(p => p.name).map(p => `${p.name} (${p.role})`).join(', ')}
+                                </p>
+                            )}
+                            {track.lyricists.some(l => l.name) && (
+                                <p style={{ fontSize: '0.9rem' }}>
+                                    <strong>Авторы слов:</strong>{' '}
+                                    {track.lyricists.filter(l => l.name).map(l => l.name).join(', ')}
+                                </p>
+                            )}
+                            {track.composers.some(c => c.name) && (
+                                <p style={{ fontSize: '0.9rem' }}>
+                                    <strong>Авторы музыки:</strong>{' '}
+                                    {track.composers.filter(c => c.name).map(c => c.name).join(', ')}
+                                </p>
+                            )}
+                            {track.lyrics && (
+                                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                                    Текст: {track.lyrics.length > 80 ? track.lyrics.slice(0, 80) + '...' : track.lyrics}
+                                </p>
+                            )}
+                            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                                Права: &copy; {track.copyrightShare}% / &#8471; {track.relatedRightsShare}%
+                            </p>
+                            {track.ringtone && (
+                                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                                    Рингтон: {track.ringtone}
+                                </p>
+                            )}
+                        </div>
+                    ))}
                 </div>
 
                 {/* Даты */}
@@ -179,25 +219,6 @@ export default function ReviewTab() {
                         {formData.partnerCode && <ReviewRow label="Партнёрский код" value={formData.partnerCode} />}
                     </div>
                 )}
-
-                {/* Треки */}
-                <div className="review-section">
-                    <h3>Треки</h3>
-                    {noAudioFiles ? (
-                        <p style={{ color: 'var(--warning)' }}>Релиз без аудиофайлов</p>
-                    ) : trackFiles.length === 0 ? (
-                        <p style={{ color: 'var(--error)' }}>Треки не загружены</p>
-                    ) : (
-                        <>
-                            <p><strong>Загружено треков:</strong> {trackFiles.length}</p>
-                            {trackFiles.map((file, i) => (
-                                <p key={i} style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                                    {i + 1}. {file.name}
-                                </p>
-                            ))}
-                        </>
-                    )}
-                </div>
 
                 {/* Площадки */}
                 <div className="review-section">
