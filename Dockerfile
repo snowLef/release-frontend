@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Копируем манифесты и ставим зависимости отдельным слоем для кэша
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN --mount=type=cache,target=/root/.npm npm ci
 
 # ARG передаётся в vite build через переменную окружения VITE_*
 ARG VITE_API_URL
