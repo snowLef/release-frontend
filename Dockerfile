@@ -29,6 +29,9 @@ RUN npm run build
 # Stage 2: serve static via nginx
 FROM nginx:alpine
 
+# wget нужен для healthcheck; в nginx:alpine его нет по умолчанию
+RUN apk add --no-cache wget
+
 # Кастомный конфиг для SPA-роутинга
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
