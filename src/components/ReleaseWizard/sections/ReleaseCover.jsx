@@ -2,7 +2,7 @@ import React from 'react';
 import { useWizard } from '../../../contexts/WizardContext';
 
 export default function ReleaseCover() {
-    const { coverPreview, handleCoverChange } = useWizard();
+    const { coverImage, coverPreview, handleCoverChange } = useWizard();
 
     return (
         <div className="form-card">
@@ -25,10 +25,19 @@ export default function ReleaseCover() {
                         ) : (
                             <div className="cover-placeholder">
                                 <span className="upload-icon">📁</span>
-                                <span>Нажмите для загрузки обложки</span>
+                                <span>Нажмите для загрузки</span>
                             </div>
                         )}
                     </label>
+                    {coverImage && (
+                        <div className="cover-file-info">
+                            <span className="cover-file-name">{coverImage.name}</span>
+                            <span className="cover-file-size">
+                                {(coverImage.size / 1024 / 1024).toFixed(2)} МБ
+                            </span>
+                            <span className="cover-change-hint">Нажмите на превью, чтобы изменить</span>
+                        </div>
+                    )}
                     <input
                         id="cover-upload"
                         type="file"
