@@ -232,17 +232,80 @@ export default function MyReleases() {
                                         <div className="info-value">{release.genre}</div>
                                     </div>
                                     <div>
-                                        <div className="info-label">Файл</div>
-                                        <div style={{
-                                            fontSize: '0.8rem',
-                                            wordBreak: 'break-all',
-                                            fontFamily: 'monospace',
-                                            color: 'var(--terracotta)'
-                                        }}>
-                                            {release.wavFileUrl || 'Нет'}
-                                        </div>
+                                        <div className="info-label">Тип релиза</div>
+                                        <div className="info-value">{release.releaseType || '—'}</div>
                                     </div>
                                 </div>
+
+                                {/* Треки */}
+                                {release.tracks && release.tracks.length > 0 && (
+                                    <div style={{ marginBottom: '1.5rem' }}>
+                                        <div className="info-label" style={{ marginBottom: '0.5rem' }}>
+                                            Треки ({release.tracks.length})
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                            {[...release.tracks]
+                                                .sort((a, b) => a.position - b.position)
+                                                .map((track) => (
+                                                    <div key={track.id} style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.75rem',
+                                                        padding: '0.5rem 0.75rem',
+                                                        background: 'var(--color-surface, rgba(0,0,0,0.03))',
+                                                        borderRadius: '6px',
+                                                        fontSize: '0.875rem',
+                                                    }}>
+                                                        <span style={{
+                                                            fontWeight: 600,
+                                                            color: 'var(--text-secondary)',
+                                                            minWidth: '1.5rem',
+                                                        }}>
+                                                            {track.position}.
+                                                        </span>
+                                                        <div style={{ flex: 1, minWidth: 0 }}>
+                                                            <div style={{ fontWeight: 500 }}>
+                                                                {track.title || track.originalName || 'Без названия'}
+                                                                {track.version && (
+                                                                    <span style={{
+                                                                        marginLeft: '0.4rem',
+                                                                        fontSize: '0.8rem',
+                                                                        color: 'var(--text-secondary)',
+                                                                        fontWeight: 400,
+                                                                    }}>
+                                                                        ({track.version})
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                            {track.originalName && track.title && (
+                                                                <div style={{
+                                                                    fontSize: '0.78rem',
+                                                                    color: 'var(--text-secondary)',
+                                                                    fontFamily: 'monospace',
+                                                                    overflow: 'hidden',
+                                                                    textOverflow: 'ellipsis',
+                                                                    whiteSpace: 'nowrap',
+                                                                }}>
+                                                                    {track.originalName}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        <span style={{
+                                                            fontSize: '0.75rem',
+                                                            padding: '2px 6px',
+                                                            borderRadius: '4px',
+                                                            background: 'var(--color-accent, #D14532)',
+                                                            color: '#fff',
+                                                            flexShrink: 0,
+                                                        }}>
+                                                            {track.originalName?.split('.').pop()?.toUpperCase() || 'WAV'}
+                                                        </span>
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                    </div>
+                                )}
 
                                 {/* Кнопки действий */}
                                 {release.status === 'PENDING' && (
